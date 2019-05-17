@@ -1,10 +1,10 @@
 package classifiers.knn;
 
+import model.Point;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.*;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -24,7 +24,7 @@ class Test_kNN {
         expected.add(new Point(0, 1));
         expected.add(new Point(0, 2));
         expected.add(new Point(0, 3));
-        assertThat(knn.getKNNValues(1, new Point(0, 2)), is(expected));
+        assertThat(knn.getKNNValues(1, new Point(0, 2)), equalTo(expected));
     }
 
     @Test
@@ -34,7 +34,7 @@ class Test_kNN {
         expected.add(new Point(0,0));
         expected.add(new Point(0,1));
         expected.add(new Point(0,2));
-        assertThat(knn.getKNNValues(1, new Point(0,1)), is(expected));
+        assertThat(knn.getKNNValues(1, new Point(0,1)), equalTo(expected));
     }
 
     @Test
@@ -45,7 +45,7 @@ class Test_kNN {
         expected.add(new Point(0,1));
         expected.add(new Point(0,2));
         expected.add(new Point(1,1));
-        assertThat(knn.getKNNValues(1, new Point(0,1)), is(expected));
+        assertThat(knn.getKNNValues(1, new Point(0,1)), equalTo(expected));
     }
 
     @Test
@@ -55,7 +55,7 @@ class Test_kNN {
         expected.add(new Point(0,1));
         expected.add(new Point(0,2));
         expected.add(new Point(1,2));
-        assertThat(knn.getKNNValues(1, new Point(0,2)), is(expected));
+        assertThat(knn.getKNNValues(1, new Point(0,2)), equalTo(expected));
     }
 
     @Test
@@ -67,7 +67,7 @@ class Test_kNN {
         expected.add(new Point(0,2));
         expected.add(new Point(1,1));
         expected.add(new Point(1,2));
-        assertThat(knn.getKNNValues(2, new Point(0,2)), is(expected));
+        assertThat(knn.getKNNValues(2, new Point(0,2)), equalTo(expected));
     }
 
     @Test
@@ -80,6 +80,6 @@ class Test_kNN {
         expected.add(new Point(1,0));
         expected.add(new Point(1,1));
         expected.add(new Point(1,2));
-        assertThat(knn.getKNNValues(3, new Point(0,2)), is(expected));
+        assertThat(knn.getKNNValues(3, new Point(0,2)), equalTo(expected));
     }
 }

@@ -1,6 +1,7 @@
 package classifiers.knn;
 
-import java.awt.*;
+import model.Point;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Predicate;
@@ -14,7 +15,7 @@ class Knn {
     }
 
     Integer getPointValue(Point p){
-        return training[p.x][p.y];
+        return training[p.getX()][p.getY()];
     }
 
     Double getPointDistance(Point p, Point q){
