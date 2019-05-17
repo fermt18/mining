@@ -1,0 +1,5 @@
+.idea/
+target/
+*.png
+*.iml
+*.csv
