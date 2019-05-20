@@ -37,21 +37,4 @@ class Test_CoordinateSystem {
     @Test
     void coordinates_bottom_right(){
         assertThat(knn.getPointValue(new Point(training.length-1,training[2].length-1)), is(9));}
-
-    @Test
-    void distance_zero_points_away(){
-        assertThat(knn.getPointDistance(new Point(2, 2), new Point(2, 2)), is(0.0));
-    }
-
-    @Test
-    void distance_one_point_away() {
-        assertThat(knn.getPointDistance(new Point(0, 0), new Point(1, 1)), is(Math.sqrt(2)));
-        assertThat(knn.getPointDistance(new Point(1, 1), new Point(2, 2)), is(Math.sqrt(2)));
-        assertThat(knn.getPointDistance(new Point(0,1), new Point(0,2)), is(1.0));
-    }
-
-    @Test
-    void distance_two_points_away(){
-        assertThat(knn.getPointDistance(new Point(0,0), new Point(2,2)), is(Math.sqrt(8)));
-    }
 }

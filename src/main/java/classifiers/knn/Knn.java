@@ -10,6 +10,7 @@ import java.util.stream.IntStream;
 class Knn {
 
     Integer[][] training;
+    public Knn(){}
     public Knn(Integer[][] training){
         this.training = training;
     }
