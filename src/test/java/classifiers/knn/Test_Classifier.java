@@ -9,7 +9,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 
 class Test_Classifier {
-
+/*
     private Knn knn;
 
     @BeforeEach
@@ -40,5 +40,5 @@ class Test_Classifier {
     @Test
     void classify_single_point_surrounded_by_class_b_with_high_k(){
         assertThat(knn.classify(6, new Point(9,9)), is(0));
-    }
+    }*/
 }

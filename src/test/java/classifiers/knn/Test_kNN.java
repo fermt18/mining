@@ -11,7 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 
 class Test_kNN {
-
+/*
     private Integer[][] training_1d = new Integer[][]{{0, 1, 2, 3, 4, 5, 6, 7}};
     private Integer[][] training_2d = new Integer[][]{
             {1, 2, 3},
@@ -81,5 +81,5 @@ class Test_kNN {
         expected.add(new Point(1,1));
         expected.add(new Point(1,2));
         assertThat(knn.getKNNValues(3, new Point(0,2)), equalTo(expected));
-    }
+    }*/
 }

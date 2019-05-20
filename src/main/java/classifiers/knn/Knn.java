@@ -9,20 +9,24 @@ import java.util.stream.IntStream;
 
 class Knn {
 
-    Integer[][] training;
+    List<Point> training;
     public Knn(){}
-    public Knn(Integer[][] training){
+    public Knn(List<Point> training){
         this.training = training;
     }
 
-    Integer getPointValue(Point p){
-        return training[p.getX()][p.getY()];
+    Double getValueFromCoordinates(Integer x, Integer y){
+        for(Point p : training){
+           if(p.getX().equals(x) && p.getY().equals(y))
+               return p.getValue();
+        }
+        return null;
     }
 
     Double getPointDistance(Point p, Point q){
         return Math.sqrt(Math.pow(q.getX() - p.getX(), 2) + Math.pow((q.getY() - p.getY()), 2));
     }
-
+/*
     List<Point> getKNNValues(int k, Point p){
         List<Point> pointList = new ArrayList<>();
         IntStream.range(0 , this.training.length).forEach( i -> {
@@ -43,5 +47,5 @@ class Knn {
         return pointList.stream().filter(countZeroes).count() >
                 pointList.stream().filter(countOnes).count() ?
                 0 : 1;
-    }
+    }*/
 }
