@@ -35,4 +35,8 @@ class Test_CoordinateSystem {
     @Test
     void coordinates_single_point(){
         assertThat(knn.getValueFromCoordinates(3,4), is(7.3));}
+
+    @Test
+    void coordinates_non_existing_point(){
+        assertThat(knn.getValueFromCoordinates(10,10), is(nullValue()));}
 }

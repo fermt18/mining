@@ -15,7 +15,7 @@ public class Point {
         this.x = x;
         this.y = y;
     }
-/*
+
     @Override
     public boolean equals(Object object){
         if(this==object)
@@ -26,5 +26,5 @@ public class Point {
             return true;
 
         return false;
-    }*/
+    }
 }

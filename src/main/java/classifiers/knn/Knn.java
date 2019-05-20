@@ -23,22 +23,20 @@ class Knn {
         return null;
     }
 
-    Double getPointDistance(Point p, Point q){
+    Double computePointDistance(Point p, Point q){
         return Math.sqrt(Math.pow(q.getX() - p.getX(), 2) + Math.pow((q.getY() - p.getY()), 2));
     }
-/*
-    List<Point> getKNNValues(int k, Point p){
+
+    List<Point> computeNN(int k, Point p){
         List<Point> pointList = new ArrayList<>();
-        IntStream.range(0 , this.training.length).forEach( i -> {
-            IntStream.range(0, this.training[i].length).forEach(j -> {
-                Point q = new Point(i, j);
-                if (getPointDistance(p, q) <= k)
-                    pointList.add(q);
-            });
+        IntStream.range(0 , training.size()).forEach( i -> {
+            Point q = training.get(i);
+            if (computePointDistance(p, q) <= k)
+                pointList.add(q);
         });
         return pointList;
     }
-
+/*
     Integer classify(int k, Point p){
         List<Point> pointList = getKNNValues(k, p);
         Predicate<Point> countZeroes = point -> getPointValue(point) == 0;

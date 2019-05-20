@@ -7,7 +7,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class Test_DataFetcher {
-
+/*
     @Test
     void get_data_from_csv() throws Throwable {
         String csvFile = "datafetchers/knn_data_below_one.csv";
@@ -33,5 +33,5 @@ public class Test_DataFetcher {
         Double d_by_10 = d *10;
         Integer i = d_by_10.intValue();
         assertThat(23, is(i));
-    }
+    }*/
 }
