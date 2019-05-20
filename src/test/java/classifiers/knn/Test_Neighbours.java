@@ -25,6 +25,8 @@ class Test_Neighbours {
         }
         p = new Point(1,1);
         training.add(p);
+        p = new Point(4,0);
+        training.add(p);
     }
 
     @Test
@@ -56,5 +58,21 @@ class Test_Neighbours {
         expected.add(new Point(0,2));
         expected.add(new Point(1,1));
         assertThat(knn.computeNN(1, new Point(0,1)), equalTo(expected));
+    }
+
+    @Test
+    void neighbours_2d_of_far_point_with_k_equal_to_1(){
+        Knn knn = new Knn(training);
+        List<Point> expected = new ArrayList<>();
+        assertThat(knn.computeNN(1, new Point(3,1)), equalTo(expected));
+    }
+
+    @Test
+    void neighbours_2d_of_far_point_with_k_equal_to_2(){
+        Knn knn = new Knn(training);
+        List<Point> expected = new ArrayList<>();
+        expected.add(new Point(1,1));
+        expected.add(new Point(4,0));
+        assertThat(knn.computeNN(2, new Point(3,1)), equalTo(expected));
     }
 }
