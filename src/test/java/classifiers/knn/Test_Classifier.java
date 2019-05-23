@@ -15,69 +15,30 @@ class Test_Classifier {
 
     private Knn knn;
 
-    List<Point> training;
-    Point p;
     @BeforeEach
     void init(){
-        /*new Integer[][]{
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 1, 1, 0, 0},
-                {0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
-                {0, 0, 0, 0, 0, 1, 0, 0, 1, 1},
-                {0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
-                {0, 0, 0, 0, 0, 0, 1, 1, 1, 1}});*/
-        training = new ArrayList<>();
-        p = new Point(6, 0);
-        p.setValue(1.0);
-        training.add(p);
-        p = new Point(7, 0);
-        p.setValue(1.0);
-        training.add(p);
-        p = new Point(8, 0);
-        p.setValue(1.0);
-        training.add(p);
-        p = new Point(9, 0);
-        p.setValue(1.0);
-        training.add(p);
-
-        p = new Point(7, 1);
-        p.setValue(1.0);
-        training.add(p);
-        p = new Point(8, 1);
-        p.setValue(1.0);
-        training.add(p);
-        p = new Point(9, 1);
-        p.setValue(1.0);
-        training.add(p);
-
-        p = new Point(5, 2);
-        p.setValue(1.0);
-        training.add(p);
-        p = new Point(8, 2);
-        p.setValue(1.0);
-        training.add(p);
-        p = new Point(9, 2);
-        p.setValue(1.0);
-        training.add(p);
-
-        p = new Point(5, 3);
-        p.setValue(1.0);
-        training.add(p);
-        p = new Point(9, 3);
-        p.setValue(1.0);
-        training.add(p);
-
-        p = new Point(6, 4);
-        p.setValue(1.0);
-        training.add(p);
-        p = new Point(7, 4);
-        p.setValue(1.0);
-        training.add(p);
+        List<Point> training = new ArrayList<>();
+        training.add(createPoint(6, 0));
+        training.add(createPoint(7, 0));
+        training.add(createPoint(8, 0));
+        training.add(createPoint(9, 0));
+        training.add(createPoint(7, 1));
+        training.add(createPoint(8, 1));
+        training.add(createPoint(9, 1));
+        training.add(createPoint(5, 2));
+        training.add(createPoint(8, 2));
+        training.add(createPoint(9, 2));
+        training.add(createPoint(5, 3));
+        training.add(createPoint(9, 3));
+        training.add(createPoint(6, 4));
+        training.add(createPoint(7, 4));
         knn = new Knn(training);
+    }
+
+    private Point createPoint(Integer x, Integer y){
+        Point p = new Point(x, y);
+        p.setValue(1.0);
+        return p;
     }
 
     @Test

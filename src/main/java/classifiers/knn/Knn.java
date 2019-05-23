@@ -84,8 +84,8 @@ class Knn {
     }
 
     private boolean isPointWithinBounds(Point p){
-        if(p.getY()>this.dataSetSize || p.getX()>this.dataSetSize)
-            return false;
+        if(p.getY()<this.dataSetSize && p.getX()<this.dataSetSize)
+            return true;
 
         return false;
     }
