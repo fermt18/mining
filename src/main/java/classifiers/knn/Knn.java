@@ -10,6 +10,7 @@ import java.util.stream.IntStream;
 class Knn {
 
     private List<Point> dataSet;
+    private Integer dataSetSize;
     Knn(){}
     Knn(List<Point> training){
         this.dataSet = createDataSet(training);
@@ -18,7 +19,7 @@ class Knn {
 
     private List<Point> createDataSet(List<Point> trainingSet){
         List<Point> dataSet = new ArrayList<>();
-        int dataSetSize = computeSizeOfSquareDataSet(trainingSet);
+        dataSetSize = computeSizeOfSquareDataSet(trainingSet);
         IntStream.range(0, dataSetSize).forEach(i->{
             IntStream.range(0, dataSetSize).forEach(j-> {
                 Point p = new Point(i, j);
@@ -62,11 +63,13 @@ class Knn {
 
     List<Point> computeNN(int k, Point p){
         List<Point> pointList = new ArrayList<>();
-        IntStream.range(0 , dataSet.size()).forEach( i -> {
-            Point q = dataSet.get(i);
-            if (computePointDistance(p, q) <= k)
-                pointList.add(q);
-        });
+        if(isPointWithinBounds(p)) {
+            IntStream.range(0, dataSet.size()).forEach(i -> {
+                Point q = dataSet.get(i);
+                if (computePointDistance(p, q) <= k)
+                    pointList.add(q);
+            });
+        }
         return pointList;
     }
 
@@ -78,5 +81,12 @@ class Knn {
         return pointList.stream().filter(countZeroes).count() >
                 pointList.stream().filter(countOnes).count() ?
                 0 : 1;
+    }
+
+    private boolean isPointWithinBounds(Point p){
+        if(p.getY()>this.dataSetSize || p.getX()>this.dataSetSize)
+            return false;
+
+        return false;
     }
 }

@@ -64,4 +64,11 @@ class Test_Neighbours {
         expected.add(new Point(2,0));
         assertThat(knn.computeNN(2, new Point(0,0)), equalTo(expected));
     }
+
+    @Test
+    void neighbours_of_non_existing_point(){
+        Knn knn = new Knn(training);
+        List<Point> expected = new ArrayList<>();
+        assertThat(knn.computeNN(1, new Point(0,9)), equalTo(expected));
+    }
 }
