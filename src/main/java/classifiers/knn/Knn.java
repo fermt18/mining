@@ -30,14 +30,15 @@ class Knn {
         return dataSet;
     }
 
-    private Integer computeSizeOfSquareDataSet(List<Point> trainingSet){
-        Integer xMax = 0;
-        Integer yMax = 0;
+    Integer computeSizeOfSquareDataSet(List<Point> trainingSet){
+        Double xMax = 0.0;
+        Double yMax = 0.0;
         for(Point p : trainingSet){
             if(p.getX() > xMax) xMax = p.getX();
             if(p.getY() > yMax) yMax = p.getY();
         }
-        return (xMax > yMax) ? xMax+1 : yMax+1;
+        Double max = (xMax > yMax) ? xMax+1 : yMax+1;
+        return max.intValue();
     }
 
     private void addTrainingSetToDataSet(List<Point> trainingSet){
@@ -49,7 +50,7 @@ class Knn {
         });
     }
 
-    Double getValueFromCoordinates(Integer x, Integer y){
+    Double getValueFromCoordinates(Double x, Double y){
         for(Point p : dataSet){
            if(p.getX().equals(x) && p.getY().equals(y))
                return p.getValue();

@@ -25,18 +25,27 @@ class Test_CoordinateSystem {
         p = new Point(3,4);
         p.setValue(7.3);
         training.add(p);
+        p = new Point(1,6.9);
+        p.setValue(80.0);
+        training.add(p);
         knn = new Knn(training);
     }
 
     @Test
     void coordinates_zero(){
-        assertThat(knn.getValueFromCoordinates(0,0), is(1.0));}
+        assertThat(knn.getValueFromCoordinates(0.0,0.0), is(1.0));}
 
     @Test
     void coordinates_single_point(){
-        assertThat(knn.getValueFromCoordinates(3,4), is(7.3));}
+        assertThat(knn.getValueFromCoordinates(3.0,4.0), is(7.3));}
 
     @Test
     void coordinates_non_existing_point(){
-        assertThat(knn.getValueFromCoordinates(10,10), is(nullValue()));}
+        assertThat(knn.getValueFromCoordinates(10.0,10.0), is(nullValue()));}
+
+    @Test
+    void datasize_considering_training_set(){
+        assertThat(knn.computeSizeOfSquareDataSet(training), is(7));
+    }
+
 }

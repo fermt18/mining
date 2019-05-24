@@ -2,17 +2,32 @@ package model;
 
 public class Point {
 
-    private Integer x;
-    private Integer y;
+    private Double x;
+    private Double y;
     private Double value;
 
-    public Integer getX(){return this.x;}
-    public Integer getY(){return this.y;}
+    public Double getX(){return this.x;}
+    public Double getY(){return this.y;}
     public Double getValue(){return this.value;}
     public void setValue(Double value){this.value = value;}
 
     public Point(Integer x, Integer y){
+        this.x = Double.valueOf(x);
+        this.y = Double.valueOf(y);
+    }
+
+    public Point(Double x, Double y){
         this.x = x;
+        this.y = y;
+    }
+
+    public Point(Double x, Integer y){
+        this.x = x;
+        this.y = Double.valueOf(y);
+    }
+
+    public Point(Integer x, Double y){
+        this.x = Double.valueOf(x);
         this.y = y;
     }
 

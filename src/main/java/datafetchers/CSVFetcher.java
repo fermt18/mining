@@ -23,8 +23,8 @@ public class CSVFetcher {
         List<String> lines = Files.lines(Paths.get(csvPath)).collect(Collectors.toList());
         List<Point> points = new ArrayList<>();
         for(String line : lines.subList(1, lines.size())) {
-            Integer xCoordinate = Integer.valueOf(line.split(",")[0]);
-            Integer yCoordinate = Integer.valueOf(line.split(",")[1]);
+            Double xCoordinate = Double.valueOf(line.split(",")[0]);
+            Double yCoordinate = Double.valueOf(line.split(",")[1]);
             Double value = Double.valueOf(line.split(",")[2]);
             Point p = new Point(xCoordinate, yCoordinate);
             p.setValue(value);
