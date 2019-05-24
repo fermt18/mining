@@ -2,19 +2,59 @@ package classifiers.knn;
 
 import model.Point;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
-class Knn {
+public class Knn {
 
     private List<Point> dataSet;
     private Integer dataSetSize;
-    Knn(){}
-    Knn(List<Point> training){
+    private Double classA;
+    private Double classB;
+
+    public Double getClassA(){return this.classA;}
+    public Double getClassB(){return this.classB;}
+
+    public Knn(List<Point> training){
+        fetchClassifierClasses(training);
         this.dataSet = createDataSet(training);
         addTrainingSetToDataSet(training);
+    }
+
+    public Double classify(int k, Point p){
+        List<Point> neighbouringPointList = computeNN(k, p);
+        long counterClassA = neighbouringPointList.stream().filter( point -> {
+            try {
+                return getValueFromCoordinates(point.getX(), point.getY()) == this.classA;
+            }catch (NullPointerException e){
+                return false;
+            }
+        }).count();
+
+        long counterClassB = neighbouringPointList.stream().filter( point -> {
+            try {
+                return getValueFromCoordinates(point.getX(), point.getY()) == this.classB;
+            }catch (NullPointerException e){
+                return false;
+            }
+        }).count();
+
+        return counterClassA > counterClassB ? this.classA : this.classB;
+    }
+
+    private void fetchClassifierClasses(List<Point> training){
+        List<Double> classList = new ArrayList<>();
+        for(Point p : training) {
+            if(!classList.contains(p.getValue()))
+                classList.add(p.getValue());
+        }
+        if(classList.size() > 2)
+            throw new IllegalArgumentException("Training set has more than two classes");
+
+        this.classA = Collections.min(classList);
+        this.classB = Collections.max(classList);
     }
 
     private List<Point> createDataSet(List<Point> trainingSet){
@@ -23,7 +63,6 @@ class Knn {
         IntStream.range(0, dataSetSize).forEach(i->{
             IntStream.range(0, dataSetSize).forEach(j-> {
                 Point p = new Point(i, j);
-                p.setValue(0.0);
                 dataSet.add(p);
             });
         });
@@ -63,31 +102,18 @@ class Knn {
     }
 
     List<Point> computeNN(int k, Point p){
-        List<Point> pointList = new ArrayList<>();
+        List<Point> nnList = new ArrayList<>();
         if(isPointWithinBounds(p)) {
             IntStream.range(0, dataSet.size()).forEach(i -> {
                 Point q = dataSet.get(i);
-                if (computePointDistance(p, q) <= k)
-                    pointList.add(q);
+                if (q.getValue()!= null && computePointDistance(p, q) <= k)
+                    nnList.add(q);
             });
         }
-        return pointList;
-    }
-
-    Integer classify(int k, Point p){
-        List<Point> pointList = computeNN(k, p);
-        Predicate<Point> countZeroes = point -> getValueFromCoordinates(point.getX(), point.getY()) == 0.0;
-        Predicate<Point> countOnes   = point -> getValueFromCoordinates(point.getX(), point.getY()) == 1.0;
-
-        return pointList.stream().filter(countZeroes).count() >
-                pointList.stream().filter(countOnes).count() ?
-                0 : 1;
+        return nnList;
     }
 
     private boolean isPointWithinBounds(Point p){
-        if(p.getY()<this.dataSetSize && p.getX()<this.dataSetSize)
-            return true;
-
-        return false;
+        return p.getY()<this.dataSetSize && p.getX()<this.dataSetSize;
     }
 }

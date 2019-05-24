@@ -15,11 +15,11 @@ public class CSVFetcher {
 
     private URI csvPath;
 
-    CSVFetcher(String csvPath) throws URISyntaxException {
+    public CSVFetcher(String csvPath) throws URISyntaxException {
         this.csvPath = ClassLoader.getSystemResource(csvPath).toURI();
     }
 
-    List<Point> getTrainingSet() throws IOException {
+    public List<Point> getTrainingSet() throws IOException {
         List<String> lines = Files.lines(Paths.get(csvPath)).collect(Collectors.toList());
         List<Point> points = new ArrayList<>();
         for(String line : lines.subList(1, lines.size())) {

@@ -4,6 +4,8 @@ import model.Point;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -13,7 +15,7 @@ class Test_PointDistance {
 
     @BeforeEach
     void init(){
-        knn = new Knn();
+        knn = new Knn(new ArrayList<>());
     }
 
     @Test
