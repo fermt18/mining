@@ -23,7 +23,7 @@ class Test_CoordinateSystem {
         p.setValue(1.0);
         training.add(p);
         p = new Point(3,4);
-        p.setValue(7.3);
+        p.setValue(1.0);
         training.add(p);
         p = new Point(1,6.9);
         p.setValue(80.0);
@@ -37,7 +37,7 @@ class Test_CoordinateSystem {
 
     @Test
     void coordinates_single_point(){
-        assertThat(knn.getValueFromCoordinates(3.0,4.0), is(7.3));}
+        assertThat(knn.getValueFromCoordinates(3.0,4.0), is(1.0));}
 
     @Test
     void coordinates_non_existing_point(){

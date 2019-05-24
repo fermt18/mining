@@ -27,7 +27,7 @@ public class Knn {
         List<Point> neighbouringPointList = computeNN(k, p);
         long counterClassA = neighbouringPointList.stream().filter( point -> {
             try {
-                return getValueFromCoordinates(point.getX(), point.getY()) == this.classA;
+                return getValueFromCoordinates(point.getX(), point.getY()).equals(this.classA);
             }catch (NullPointerException e){
                 return false;
             }
@@ -35,7 +35,7 @@ public class Knn {
 
         long counterClassB = neighbouringPointList.stream().filter( point -> {
             try {
-                return getValueFromCoordinates(point.getX(), point.getY()) == this.classB;
+                return getValueFromCoordinates(point.getX(), point.getY()).equals(this.classB);
             }catch (NullPointerException e){
                 return false;
             }
@@ -97,7 +97,7 @@ public class Knn {
         return null;
     }
 
-    Double computePointDistance(Point p, Point q){
+    static Double computePointDistance(Point p, Point q){
         return Math.sqrt(Math.pow(q.getX() - p.getX(), 2) + Math.pow((q.getY() - p.getY()), 2));
     }
 

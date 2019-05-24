@@ -41,27 +41,27 @@ class Test_Classifier {
 
     @Test
     void classify_single_point_existing_in_training_set_surrounded_by_class_a(){
-        assertThat(knn.classify(1, new Point(2,9)), is(1));
+        assertThat(knn.classify(1, new Point(2,9)), is(1.0));
     }
 
     @Test
     void classify_single_point_existing_in_training_set_surrounded_by_class_b(){
-        assertThat(knn.classify(1, new Point(9,2)), is(0));
+        assertThat(knn.classify(1, new Point(9,2)), is(0.0));
     }
 
     @Test
     void classify_single_point_non_existing_in_training_set_surrounded_by_class_a(){
-        assertThat(knn.classify(1, new Point(1,9)), is(1));
+        assertThat(knn.classify(1, new Point(1,9)), is(1.0));
     }
 
     @Test
     void classify_single_point_non_existing_in_training_set_surrounded_by_class_b(){
-        assertThat(knn.classify(1, new Point(9,1)), is(0));
+        assertThat(knn.classify(1, new Point(9,1)), is(0.0));
     }
 
     @Test
     void classify_single_point_surrounded_by_class_b_with_high_k(){
-        assertThat(knn.classify(6, new Point(9,0)), is(0));
+        assertThat(knn.classify(6, new Point(9,0)), is(0.0));
     }
 
     @Test
