@@ -14,8 +14,8 @@ public class Knn {
     private Double classA;
     private Double classB;
 
-    public Double getClassA(){return this.classA;}
-    public Double getClassB(){return this.classB;}
+    Double getClassA(){return this.classA;}
+    Double getClassB(){return this.classB;}
 
     public Knn(List<Point> training){
         fetchClassifierClasses(training);
@@ -32,7 +32,6 @@ public class Knn {
                 return false;
             }
         }).count();
-
         long counterClassB = neighbouringPointList.stream().filter( point -> {
             try {
                 return getValueFromCoordinates(point.getX(), point.getY()).equals(this.classB);
@@ -40,8 +39,42 @@ public class Knn {
                 return false;
             }
         }).count();
-
         return counterClassA > counterClassB ? this.classA : this.classB;
+    }
+
+    static Double computePointDistance(Point p, Point q){
+        return Math.sqrt(Math.pow(q.getX() - p.getX(), 2) + Math.pow((q.getY() - p.getY()), 2));
+    }
+
+    Integer computeSizeOfSquareDataSet(List<Point> trainingSet){
+        Double xMax = 0.0;
+        Double yMax = 0.0;
+        for(Point p : trainingSet){
+            if(p.getX() > xMax) xMax = p.getX();
+            if(p.getY() > yMax) yMax = p.getY();
+        }
+        Double max = (xMax > yMax) ? xMax+1 : yMax+1;
+        return max.intValue();
+    }
+
+    Double getValueFromCoordinates(Double x, Double y){
+        for(Point p : dataSet){
+            if(p.getX().equals(x) && p.getY().equals(y))
+                return p.getValue();
+        }
+        return null;
+    }
+
+    List<Point> computeNN(int k, Point p){
+        List<Point> nnList = new ArrayList<>();
+        if(isPointWithinBounds(p)) {
+            IntStream.range(0, dataSet.size()).forEach(i -> {
+                Point q = dataSet.get(i);
+                if (q.getValue()!= null && computePointDistance(p, q) <= k)
+                    nnList.add(q);
+            });
+        }
+        return nnList;
     }
 
     private void fetchClassifierClasses(List<Point> training){
@@ -60,24 +93,12 @@ public class Knn {
     private List<Point> createDataSet(List<Point> trainingSet){
         List<Point> dataSet = new ArrayList<>();
         dataSetSize = computeSizeOfSquareDataSet(trainingSet);
-        IntStream.range(0, dataSetSize).forEach(i->{
-            IntStream.range(0, dataSetSize).forEach(j-> {
-                Point p = new Point(i, j);
-                dataSet.add(p);
-            });
-        });
+        IntStream.range(0, dataSetSize).forEach(i->
+                IntStream.range(0, dataSetSize).forEach(j-> {
+            Point p = new Point(i, j);
+            dataSet.add(p);
+        }));
         return dataSet;
-    }
-
-    Integer computeSizeOfSquareDataSet(List<Point> trainingSet){
-        Double xMax = 0.0;
-        Double yMax = 0.0;
-        for(Point p : trainingSet){
-            if(p.getX() > xMax) xMax = p.getX();
-            if(p.getY() > yMax) yMax = p.getY();
-        }
-        Double max = (xMax > yMax) ? xMax+1 : yMax+1;
-        return max.intValue();
     }
 
     private void addTrainingSetToDataSet(List<Point> trainingSet){
@@ -87,30 +108,6 @@ public class Knn {
                     dataSet.get(i).setValue(trainingSet.get(j).getValue());
             });
         });
-    }
-
-    Double getValueFromCoordinates(Double x, Double y){
-        for(Point p : dataSet){
-           if(p.getX().equals(x) && p.getY().equals(y))
-               return p.getValue();
-        }
-        return null;
-    }
-
-    static Double computePointDistance(Point p, Point q){
-        return Math.sqrt(Math.pow(q.getX() - p.getX(), 2) + Math.pow((q.getY() - p.getY()), 2));
-    }
-
-    List<Point> computeNN(int k, Point p){
-        List<Point> nnList = new ArrayList<>();
-        if(isPointWithinBounds(p)) {
-            IntStream.range(0, dataSet.size()).forEach(i -> {
-                Point q = dataSet.get(i);
-                if (q.getValue()!= null && computePointDistance(p, q) <= k)
-                    nnList.add(q);
-            });
-        }
-        return nnList;
     }
 
     private boolean isPointWithinBounds(Point p){
