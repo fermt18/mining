@@ -31,16 +31,6 @@ public class Knn {
         return counterClassA > counterClassB ? this.classA : this.classB;
     }
 
-    private Predicate<Point> byClass(Double classification){
-        return (Point p) -> {
-            try {
-                return this.getValueFromCoordinates(p.getX(), p.getY()).equals(classification);
-            } catch (NullPointerException e) {
-                return false;
-            }
-        };
-    }
-
     static Double computePointDistance(Point p, Point q){
         return Math.sqrt(Math.pow(q.getX() - p.getX(), 2) + Math.pow((q.getY() - p.getY()), 2));
     }
@@ -57,11 +47,11 @@ public class Knn {
     }
 
     Double getValueFromCoordinates(Double x, Double y){
-        for(Point p : dataSet){
-            if(p.getX().equals(x) && p.getY().equals(y))
-                return p.getValue();
-        }
-        return null;
+        return dataSet.stream()
+                .filter(p->p.equals(new Point(x,y)))
+                .findAny()
+                .orElse(new Point(0,0))
+                .getValue();
     }
 
     List<Point> computeNN(int k, Point p){
@@ -111,5 +101,15 @@ public class Knn {
 
     private boolean isPointWithinBounds(Point p){
         return p.getY()<this.dataSetSize && p.getX()<this.dataSetSize;
+    }
+
+    private Predicate<Point> byClass(Double classification){
+        return (Point p) -> {
+            try {
+                return getValueFromCoordinates(p.getX(), p.getY()).equals(classification);
+            } catch (NullPointerException e) {
+                return false;
+            }
+        };
     }
 }
