@@ -1,6 +1,7 @@
 package classifiers.knn;
 
 import model.Point;
+import utils.Utils;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,19 +32,13 @@ public class Knn {
         return counterClassA > counterClassB ? this.classA : this.classB;
     }
 
-    static Double computePointDistance(Point p, Point q){
-        return Math.sqrt(Math.pow(q.getX() - p.getX(), 2) + Math.pow((q.getY() - p.getY()), 2));
-    }
-
     Integer computeSizeOfSquareDataSet(List<Point> trainingSet){
-        Double xMax = 0.0;
-        Double yMax = 0.0;
+        Double max = 0.0;
         for(Point p : trainingSet){
-            if(p.getX() > xMax) xMax = p.getX();
-            if(p.getY() > yMax) yMax = p.getY();
+            if(p.getX() > max) max = p.getX();
+            if(p.getY() > max) max = p.getY();
         }
-        Double max = (xMax > yMax) ? xMax+1 : yMax+1;
-        return max.intValue();
+        return max.intValue()+1;
     }
 
     Double getValueFromCoordinates(Double x, Double y){
@@ -59,7 +54,7 @@ public class Knn {
         if(isPointWithinBounds(p)) {
             IntStream.range(0, dataSet.size()).forEach(i -> {
                 Point q = dataSet.get(i);
-                if (q.getValue()!= null && computePointDistance(p, q) <= k)
+                if (q.getValue()!= null && Utils.computePointDistance(p, q) <= k)
                     nnList.add(q);
             });
         }
