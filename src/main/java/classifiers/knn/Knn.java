@@ -5,6 +5,7 @@ import model.Point;
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 public class Knn {
@@ -25,21 +26,19 @@ public class Knn {
 
     public Double classify(int k, Point p){
         List<Point> neighbouringPointList = computeNN(k, p);
-        long counterClassA = neighbouringPointList.stream().filter( point -> {
-            try {
-                return getValueFromCoordinates(point.getX(), point.getY()).equals(this.classA);
-            }catch (NullPointerException e){
-                return false;
-            }
-        }).count();
-        long counterClassB = neighbouringPointList.stream().filter( point -> {
-            try {
-                return getValueFromCoordinates(point.getX(), point.getY()).equals(this.classB);
-            }catch (NullPointerException e){
-                return false;
-            }
-        }).count();
+        long counterClassA = neighbouringPointList.stream().filter(byClass(this.classA)).count();
+        long counterClassB = neighbouringPointList.stream().filter(byClass(this.classB)).count();
         return counterClassA > counterClassB ? this.classA : this.classB;
+    }
+
+    private Predicate<Point> byClass(Double classification){
+        return (Point p) -> {
+            try {
+                return this.getValueFromCoordinates(p.getX(), p.getY()).equals(classification);
+            } catch (NullPointerException e) {
+                return false;
+            }
+        };
     }
 
     static Double computePointDistance(Point p, Point q){
