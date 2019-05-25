@@ -61,9 +61,9 @@ public class Knn {
         return nnList;
     }
 
-    private void fetchClassifierClasses(List<Point> training){
+    private void fetchClassifierClasses(List<Point> trainingSet){
         List<Double> classList = new ArrayList<>();
-        for(Point p : training) {
+        for(Point p : trainingSet) {
             if(!classList.contains(p.getValue()))
                 classList.add(p.getValue());
         }
