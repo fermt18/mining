@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class IT_UseCase_CSV {
 
@@ -25,13 +27,18 @@ public class IT_UseCase_CSV {
     }
 
     @Test
-    void use_case_csv_data() throws Throwable {
+    void use_case_csv_data_k_1() throws Throwable {
         String csvFile = "datafetchers/knn_data.csv";
         CSVFetcher csvFetcher = new CSVFetcher(csvFile);
         List<Point> trainingSet = csvFetcher.getTrainingSet();
+        Integer correctClassifications = 0;
         Knn knn = new Knn(trainingSet);
-        for(Point p : validationSet)
-            System.out.println(knn.classify(1, p));
+        for(Point p : validationSet) {
+            if (!knn.classify(1, p).equals(p.getValue()))
+                correctClassifications++;
+        }
+        Double error = Double.valueOf(correctClassifications) / Double.valueOf(validationSet.size());
+        assertThat(error, is(1.0/3.0));
     }
 
     private Point createNewPoint(Point p, Double value){
