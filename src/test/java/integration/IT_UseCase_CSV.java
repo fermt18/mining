@@ -8,15 +8,21 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
+
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class IT_UseCase_CSV {
+class IT_UseCase_CSV {
 
     private List<Point> validationSet;
+    private List<Point> trainingSet;
 
     @BeforeEach
-    void init(){
+    void init() throws Throwable {
+        String csvFile = "datafetchers/knn_data.csv";
+        CSVFetcher csvFetcher = new CSVFetcher(csvFile);
+        trainingSet = csvFetcher.getTrainingSet();
         validationSet = new ArrayList<>();
         validationSet.add(createNewPoint(new Point(110.1, 19.2), 1.0));
         validationSet.add(createNewPoint(new Point(108, 17.6), 1.0));
@@ -27,18 +33,19 @@ public class IT_UseCase_CSV {
     }
 
     @Test
-    void use_case_csv_data_k_1() throws Throwable {
-        String csvFile = "datafetchers/knn_data.csv";
-        CSVFetcher csvFetcher = new CSVFetcher(csvFile);
-        List<Point> trainingSet = csvFetcher.getTrainingSet();
-        Integer correctClassifications = 0;
+    void test_different_ks(){
+        //IntStream.range(0, 15).forEach(this::use_case_csv_data_k_1);
+        use_case_csv_data_k_1(3);
+    }
+
+    void use_case_csv_data_k_1(int k) {
+        Integer wrongClassifications = 0;
         Knn knn = new Knn(trainingSet);
         for(Point p : validationSet) {
-            if (!knn.classify(1, p).equals(p.getValue()))
-                correctClassifications++;
+            if (!knn.classify(k, p).equals(p.getValue()))
+                wrongClassifications++;
         }
-        Double error = Double.valueOf(correctClassifications) / Double.valueOf(validationSet.size());
-        assertThat(error, is(1.0/3.0));
+        System.out.println("k=" + k + ", error=" + Double.valueOf(wrongClassifications) / validationSet.size());
     }
 
     private Point createNewPoint(Point p, Double value){
