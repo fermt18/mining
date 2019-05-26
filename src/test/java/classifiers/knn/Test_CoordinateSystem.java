@@ -36,8 +36,13 @@ class Test_CoordinateSystem {
         assertThat(knn.getValueFromCoordinates(0.0,0.0), is(1.0));}
 
     @Test
-    void coordinates_single_point(){
+    void coordinates_single_point_integer_coordinates(){
         assertThat(knn.getValueFromCoordinates(3.0,4.0), is(1.0));}
+
+    @Test
+    void coordinates_single_point_double_coordinates(){
+        assertThat(knn.getValueFromCoordinates(1.0,6.9), is(80.0));}
+
 
     @Test
     void coordinates_non_existing_point(){
@@ -45,7 +50,6 @@ class Test_CoordinateSystem {
 
     @Test
     void datasize_considering_training_set(){
-        assertThat(knn.computeSizeOfSquareDataSet(training), is(7));
-    }
+        assertThat(knn.computeSizeOfSquareDataSet(training), is(7));}
 
 }

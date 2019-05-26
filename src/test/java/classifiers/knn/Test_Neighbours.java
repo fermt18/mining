@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -19,9 +20,9 @@ class Test_Neighbours {
     @BeforeEach
     void init(){
         List<Point> training = new ArrayList<>();
-        training.add(createNewPoint(new Point(0,8), 0.0));
-        training.add(createNewPoint(new Point(0,7), 0.0));
-        training.add(createNewPoint(new Point(0,6), 0.0));
+        training.add(createNewPoint(new Point(0,8), 1.0));
+        training.add(createNewPoint(new Point(0,7), 1.0));
+        training.add(createNewPoint(new Point(0,6), 1.0));
         knn = new Knn(training);
         expected = new ArrayList<>();
     }
@@ -52,6 +53,23 @@ class Test_Neighbours {
     void neighbours_of_non_existing_point(){
         assertThat(knn.computeNN(1, new Point(10,9)), equalTo(expected));
     }
+
+    @Test
+    void validation_point_belongs_to_training_set_integer_coordinates(){
+        Point p = createNewPoint(new Point(10, 10), 1.0);
+        expected = Collections.singletonList(p);
+        knn = new Knn(expected);
+        assertThat(knn.computeNN(1, p), equalTo(expected));
+    }
+
+    @Test
+    void validation_point_belongs_to_training_set_double_coordinates(){
+        Point p = createNewPoint(new Point(10.1, 10.2), 1.0);
+        expected = Collections.singletonList(p);
+        knn = new Knn(expected);
+        assertThat(knn.computeNN(1, p), equalTo(expected));
+    }
+
 
     private Point createNewPoint(Point p, Double value){
         p.setValue(value);

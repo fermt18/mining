@@ -24,6 +24,7 @@ class IT_UseCase_CSV {
         CSVFetcher csvFetcher = new CSVFetcher(csvFile);
         trainingSet = csvFetcher.getTrainingSet();
         validationSet = new ArrayList<>();
+        // point values are only added for test validation purposes
         validationSet.add(createNewPoint(new Point(110.1, 19.2), 1.0));
         validationSet.add(createNewPoint(new Point(108, 17.6), 1.0));
         validationSet.add(createNewPoint(new Point(81, 20), 1.0));
@@ -33,19 +34,22 @@ class IT_UseCase_CSV {
     }
 
     @Test
-    void test_different_ks(){
-        //IntStream.range(0, 15).forEach(this::use_case_csv_data_k_1);
-        use_case_csv_data_k_1(3);
+    void test_all_ks(){
+        IntStream
+                .iterate(1,i -> i+2).limit(10)
+                .forEach(this::use_case_csv_data_k_1);
     }
 
     void use_case_csv_data_k_1(int k) {
         Integer wrongClassifications = 0;
         Knn knn = new Knn(trainingSet);
         for(Point p : validationSet) {
-            if (!knn.classify(k, p).equals(p.getValue()))
+            Double classification = knn.classify(k, p);
+            if (classification==null || !classification.equals(p.getValue()))
                 wrongClassifications++;
         }
-        System.out.println("k=" + k + ", error=" + Double.valueOf(wrongClassifications) / validationSet.size());
+        //assertThat(Double.valueOf(wrongClassifications) / validationSet.size(), is(1.0/6));
+        System.out.println("k:" + k + ", error:" + Double.valueOf(wrongClassifications) / validationSet.size());
     }
 
     private Point createNewPoint(Point p, Double value){

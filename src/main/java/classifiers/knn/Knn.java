@@ -3,11 +3,12 @@ package classifiers.knn;
 import model.Point;
 import utils.Utils;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.toMap;
 
 public class Knn {
 
@@ -22,11 +23,12 @@ public class Knn {
     public Knn(List<Point> training){
         fetchClassifierClasses(training);
         this.dataSet = createDataSet(training);
-        addTrainingSetToDataSet(training);
     }
 
     public Double classify(int k, Point p){
         List<Point> neighbouringPointList = computeNN(k, p);
+        if(neighbouringPointList.size() == 0)
+            return null; // this should happen only when training set is empty
         long counterClassA = neighbouringPointList.stream().filter(byClass(this.classA)).count();
         long counterClassB = neighbouringPointList.stream().filter(byClass(this.classB)).count();
         return counterClassA > counterClassB ? this.classA : this.classB;
@@ -50,13 +52,20 @@ public class Knn {
     }
 
     List<Point> computeNN(int k, Point p){
-        List<Point> nnList = new ArrayList<>();
+        Map<Point, Double> pointDistance = new LinkedHashMap<>();
         if(isPointWithinBounds(p)) {
             IntStream.range(0, dataSet.size()).forEach(i -> {
-                Point q = dataSet.get(i);
-                if (q.getValue()!= null && Utils.computePointDistance(p, q) <= k)
-                    nnList.add(q);
+                pointDistance.put(dataSet.get(i), Utils.computePointDistance(p, dataSet.get(i)));
             });
+        }
+        Map<Point, Double> pointDistanceSorted = pointDistance.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(
+                        toMap(e -> e.getKey(), e -> e.getValue(), (e1, e2) -> e2,
+                                LinkedHashMap::new));
+        List<Point> nnList = new ArrayList<>();
+        for (Map.Entry<Point, Double> entry : pointDistanceSorted.entrySet()) {
+            nnList.add(entry.getKey());
         }
         return nnList;
     }
@@ -75,23 +84,8 @@ public class Knn {
     }
 
     private List<Point> createDataSet(List<Point> trainingSet){
-        List<Point> dataSet = new ArrayList<>();
         dataSetSize = computeSizeOfSquareDataSet(trainingSet);
-        IntStream.range(0, dataSetSize).forEach(i->
-                IntStream.range(0, dataSetSize).forEach(j-> {
-            Point p = new Point(i, j);
-            dataSet.add(p);
-        }));
-        return dataSet;
-    }
-
-    private void addTrainingSetToDataSet(List<Point> trainingSet){
-        IntStream.range(0, dataSet.size()).forEach(i->{
-            IntStream.range(0, trainingSet.size()).forEach(j->{
-                if(dataSet.get(i).equals(trainingSet.get(j)))
-                    dataSet.get(i).setValue(trainingSet.get(j).getValue());
-            });
-        });
+        return trainingSet;
     }
 
     private boolean isPointWithinBounds(Point p){
