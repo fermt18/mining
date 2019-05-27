@@ -38,11 +38,7 @@ class IT_UseCase_CSV {
 
     @ParameterizedTest
     @CsvSource({"1,0.33", "3,0.33", "5,0.33", "7,0.33", "9,0.33", "11,0.17", "13,0.17", "18,0.5"})
-    void test_all_ks(Integer k, Double error){
-        use_case_csv_data_with_k(k, error);
-    }
-
-    private void use_case_csv_data_with_k(Integer k, Double expectedError) {
+    void test_all_ks(Integer k, Double expectedError){
         int wrongClassifications = 0;
         Knn knn = new Knn(trainingSet);
         for(Point p : validationSet) {
