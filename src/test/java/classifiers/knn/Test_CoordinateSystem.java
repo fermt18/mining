@@ -47,9 +47,4 @@ class Test_CoordinateSystem {
     @Test
     void coordinates_non_existing_point(){
         assertThat(knn.getValueFromCoordinates(10.0,10.0), is(nullValue()));}
-
-    @Test
-    void datasize_considering_training_set(){
-        assertThat(knn.computeSizeOfSquareDataSet(training), is(7));}
-
 }
