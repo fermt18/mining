@@ -30,16 +30,6 @@ class Test_Classifier {
     }
 
     @Test
-    void get_class_a_from_training_set(){
-        assertThat(knn.getClassA(), is(0.0));
-    }
-
-    @Test
-    void get_class_b_from_training_set(){
-        assertThat(knn.getClassB(), is(1.0));
-    }
-
-    @Test
     void classify_single_point_existing_in_training_set_surrounded_by_class_a(){
         assertThat(knn.classify(1, new Point(2,9)), is(1.0));
     }

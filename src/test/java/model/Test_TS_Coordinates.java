@@ -1,5 +1,6 @@
-package classifiers.knn;
+package model;
 
+import classifiers.knn.Knn;
 import model.Point;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,15 +11,14 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-class Test_CoordinateSystem {
+class Test_TS_Coordinates {
 
-    private Knn knn;
-    private List<Point> training;
-    private Point p;
+    private TrainingSet trainingSet;
 
     @BeforeEach
     void init(){
-        training = new ArrayList<>();
+        List<Point> training = new ArrayList<>();
+        Point p;
         p = new Point(0,0);
         p.setValue(1.0);
         training.add(p);
@@ -28,23 +28,23 @@ class Test_CoordinateSystem {
         p = new Point(1,6.9);
         p.setValue(80.0);
         training.add(p);
-        knn = new Knn(training);
+        trainingSet = new TrainingSet(training);
     }
 
     @Test
     void coordinates_zero(){
-        assertThat(knn.getValueFromCoordinates(0.0,0.0), is(1.0));}
+        assertThat(trainingSet.getValueFromCoordinates(0.0,0.0), is(1.0));}
 
     @Test
     void coordinates_single_point_integer_coordinates(){
-        assertThat(knn.getValueFromCoordinates(3.0,4.0), is(1.0));}
+        assertThat(trainingSet.getValueFromCoordinates(3.0,4.0), is(1.0));}
 
     @Test
     void coordinates_single_point_double_coordinates(){
-        assertThat(knn.getValueFromCoordinates(1.0,6.9), is(80.0));}
+        assertThat(trainingSet.getValueFromCoordinates(1.0,6.9), is(80.0));}
 
 
     @Test
     void coordinates_non_existing_point(){
-        assertThat(knn.getValueFromCoordinates(10.0,10.0), is(nullValue()));}
+        assertThat(trainingSet.getValueFromCoordinates(10.0,10.0), is(nullValue()));}
 }
