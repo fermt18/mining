@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 public class Knn {
@@ -45,20 +46,11 @@ public class Knn {
         IntStream.range(0, training.size()).forEach(i -> {
             pointDistance.put(training.get(i), Utils.computePointDistance(p, training.get(i)));
         });
-        Map<Point, Double> pointDistanceSorted = pointDistance.entrySet().stream()
+        return pointDistance.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue())
-                .collect(
-                        toMap(e -> e.getKey(), e -> e.getValue(), (e1, e2) -> e2,
-                                LinkedHashMap::new));
-        List<Point> nnList = new ArrayList<>();
-        int i=0;
-        for (Map.Entry<Point, Double> entry : pointDistanceSorted.entrySet()) {
-            nnList.add(entry.getKey());
-            i++;
-            if(i==k)
-                break;
-        }
-        return nnList;
+                .limit(k)
+                .map(Map.Entry::getKey)
+                .collect(toList());
     }
 
     private void fetchClassifierClasses(List<Point> trainingSet){
