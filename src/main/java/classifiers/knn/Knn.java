@@ -11,7 +11,7 @@ import static java.util.stream.Collectors.toMap;
 
 public class Knn {
 
-    private List<Point> dataSet;
+    private List<Point> training;
     private Double classA;
     private Double classB;
 
@@ -20,7 +20,7 @@ public class Knn {
 
     public Knn(List<Point> training){
         fetchClassifierClasses(training);
-        this.dataSet = createDataSet(training);
+        this.training = training;
     }
 
     public Double classify(int k, Point p){
@@ -31,18 +31,9 @@ public class Knn {
         long counterClassB = neighbouringPointList.stream().filter(byClass(this.classB)).count();
         return counterClassA > counterClassB ? this.classA : this.classB;
     }
-/*
-    Integer computeSizeOfSquareDataSet(List<Point> trainingSet){
-        Double max = 0.0;
-        for(Point p : trainingSet){
-            if(p.getX() > max) max = p.getX();
-            if(p.getY() > max) max = p.getY();
-        }
-        return max.intValue()+1;
-    }
-*/
+
     Double getValueFromCoordinates(Double x, Double y){
-        return dataSet.stream()
+        return training.stream()
                 .filter(p->p.equals(new Point(x,y)))
                 .findAny()
                 .orElse(new Point(0,0))
@@ -51,8 +42,8 @@ public class Knn {
 
     List<Point> computeNN(int k, Point p){
         Map<Point, Double> pointDistance = new LinkedHashMap<>();
-        IntStream.range(0, dataSet.size()).forEach(i -> {
-            pointDistance.put(dataSet.get(i), Utils.computePointDistance(p, dataSet.get(i)));
+        IntStream.range(0, training.size()).forEach(i -> {
+            pointDistance.put(training.get(i), Utils.computePointDistance(p, training.get(i)));
         });
         Map<Point, Double> pointDistanceSorted = pointDistance.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue())
@@ -81,11 +72,6 @@ public class Knn {
 
         this.classA = Collections.min(classList);
         this.classB = Collections.max(classList);
-    }
-
-    private List<Point> createDataSet(List<Point> trainingSet){
-        //dataSetSize = computeSizeOfSquareDataSet(trainingSet);
-        return trainingSet;
     }
 
     private Predicate<Point> byClass(Double classification){
