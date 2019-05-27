@@ -5,12 +5,15 @@ import datafetchers.CSVFetcher;
 import model.Point;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 class IT_UseCase_CSV {
@@ -33,27 +36,32 @@ class IT_UseCase_CSV {
         validationSet.add(createNewPoint(new Point(66, 18.4), 2.0));
     }
 
-    @Test
-    void test_all_ks(){
-        IntStream
-                .iterate(1,i -> i+2).limit(10)
-                .forEach(this::use_case_csv_data_k_1);
+    @ParameterizedTest
+    @CsvSource({"1,0.33", "3,0.33", "5,0.33", "7,0.33", "9,0.33", "11,0.17", "13,0.17", "18,0.5"})
+    void test_all_ks(Integer k, Double error){
+        use_case_csv_data_with_k(k, error);
     }
 
-    void use_case_csv_data_k_1(int k) {
-        Integer wrongClassifications = 0;
+    private void use_case_csv_data_with_k(Integer k, Double expectedError) {
+        int wrongClassifications = 0;
         Knn knn = new Knn(trainingSet);
         for(Point p : validationSet) {
             Double classification = knn.classify(k, p);
-            if (classification==null || !classification.equals(p.getValue()))
+            if (!classification.equals(p.getValue()))
                 wrongClassifications++;
         }
-        //assertThat(Double.valueOf(wrongClassifications) / validationSet.size(), is(1.0/6));
-        System.out.println("k:" + k + ", error:" + Double.valueOf(wrongClassifications) / validationSet.size());
+        Double error = roundTwoDecimals((double) wrongClassifications / validationSet.size());
+        assertThat(error, is(expectedError));
     }
 
     private Point createNewPoint(Point p, Double value){
         p.setValue(value);
         return p;
+    }
+
+    private Double roundTwoDecimals(Double value){
+        BigDecimal bd = new BigDecimal(Double.toString(value));
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }
