@@ -16,17 +16,44 @@ PR                            : Proportion of observation in Right Node after sp
 GINI (tR)               : Gini of Right Node after split, s*/
 class Gini {
 
-    private List<Double> proportionList;
+    private List<Double> inputNodePropList;
+    private List<Double> leftNodePropList;
+    private List<Double> rightNodePropList;
+    private Double leftNodeObservedProp;
+    private Double rightNodeObservedProp;
 
-    Gini(List<Double> proportionList){
-        this.proportionList = proportionList;
+    void setInputNodePropList(List<Double> inputNodePropList) {
+        this.inputNodePropList = inputNodePropList;
     }
 
-    Double computeCoefficient(){
-        Double addition = 0.0;
+    void setLeftNodePropList(List<Double> leftNodePropList) {
+        this.leftNodePropList = leftNodePropList;
+    }
+
+    void setRightNodePropList(List<Double> rightNodePropList) {
+        this.rightNodePropList = rightNodePropList;
+    }
+
+    void setLeftNodeObservedProp(Double leftNodeObservedProp) {
+        this.leftNodeObservedProp = leftNodeObservedProp;
+    }
+
+    void setRightNodeObservedProp(Double rightNodeObservedProp) {
+        this.rightNodeObservedProp = rightNodeObservedProp;
+    }
+
+    Double computeNodeCoefficient(List<Double> proportionList){
+        double addition = 0.0;
         for(Double proportion : proportionList){
             addition += Math.pow(proportion, 2);
         }
         return Utils.roundToDecimals(1 - addition, 4);
+    }
+
+    Double computeSplitCoefficient(){
+        Double giniInitialNode = computeNodeCoefficient(inputNodePropList);
+        double giniLeftNode = computeNodeCoefficient(leftNodePropList) * leftNodeObservedProp;
+        double giniRightNode = computeNodeCoefficient(rightNodePropList) * rightNodeObservedProp;
+        return Utils.roundToDecimals(giniInitialNode - giniLeftNode - giniRightNode, 4);
     }
 }

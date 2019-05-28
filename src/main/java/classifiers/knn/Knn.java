@@ -2,7 +2,6 @@ package classifiers.knn;
 
 import model.Point;
 import model.TrainingSet;
-import utils.Utils;
 
 import java.util.*;
 import java.util.function.Predicate;
