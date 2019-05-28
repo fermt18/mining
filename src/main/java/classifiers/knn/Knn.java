@@ -32,13 +32,17 @@ public class Knn {
         IntStream.range(0, trainingSet.getTrainingSet().size()).forEach(i -> {
             pointDistance.put(
                     trainingSet.getTrainingSet().get(i),
-                    Utils.computePointDistance(p, trainingSet.getTrainingSet().get(i)));
+                    computeEuclideanDistance(p, trainingSet.getTrainingSet().get(i)));
         });
         return pointDistance.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue())
                 .limit(k)
                 .map(Map.Entry::getKey)
                 .collect(toList());
+    }
+
+    Double computeEuclideanDistance(Point p, Point q){
+        return Math.sqrt(Math.pow(q.getX() - p.getX(), 2) + Math.pow((q.getY() - p.getY()), 2));
     }
 
     private Predicate<Point> byClass(Double classification){

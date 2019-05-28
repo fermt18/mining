@@ -1,10 +1,13 @@
 package utils;
 
-import model.Point;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public final class Utils {
 
-    public static Double computePointDistance(Point p, Point q){
-        return Math.sqrt(Math.pow(q.getX() - p.getX(), 2) + Math.pow((q.getY() - p.getY()), 2));
+    public static Double roundToDecimals(Double value, int decimals){
+        BigDecimal bd = new BigDecimal(Double.toString(value));
+        bd = bd.setScale(decimals, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }

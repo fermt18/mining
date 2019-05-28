@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import utils.Utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -46,18 +47,12 @@ class IT_UseCase_CSV {
             if (!classification.equals(p.getValue()))
                 wrongClassifications++;
         }
-        Double error = roundTwoDecimals((double) wrongClassifications / validationSet.size());
+        Double error = Utils.roundToDecimals((double) wrongClassifications / validationSet.size(), 2);
         assertThat(error, is(expectedError));
     }
 
     private Point createNewPoint(Point p, Double value){
         p.setValue(value);
         return p;
-    }
-
-    private Double roundTwoDecimals(Double value){
-        BigDecimal bd = new BigDecimal(Double.toString(value));
-        bd = bd.setScale(2, RoundingMode.HALF_UP);
-        return bd.doubleValue();
     }
 }
