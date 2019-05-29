@@ -5,15 +5,16 @@ import utils.Utils;
 import java.util.List;
 /*
 GINI of a split
-GINI(s,t) = GINI(t) – PL*GINI(tL) – PR*GINI(tR)
+G = ((1 – (g1_1^2 + g1_2^2)) * (ng1/n)) + ((1 – (g2_1^2 + g2_2^2)) * (ng2/n))
 Where
-s                              : split
-t                              : node
-GINI (t)                 : Gini Index of input node t
-PL                            : Proportion of observation in Left Node after split, s
-GINI (tL)                : Gini of Left Node after split, s
-PR                            : Proportion of observation in Right Node after split, s
-GINI (tR)               : Gini of Right Node after split, s*/
+Where G is the Gini index for the split point
+g1_1 is the proportion of instances in left group for class 1
+g1_2 is the proportion of instances in left group for class 2
+g2_1 is the proportion of instances in right group for class 1
+g2_2 is the proportion of instances in right group for class 2
+ng1 is the total number of instances in left group
+ng2 is the total number of instances in right group
+n is the total number of instances we are trying to group from the parent node*/
 class Gini {
 
     private List<Double> inputNodePropList;
@@ -25,19 +26,15 @@ class Gini {
     void setInputNodePropList(List<Double> inputNodePropList) {
         this.inputNodePropList = inputNodePropList;
     }
-
     void setLeftNodePropList(List<Double> leftNodePropList) {
         this.leftNodePropList = leftNodePropList;
     }
-
     void setRightNodePropList(List<Double> rightNodePropList) {
         this.rightNodePropList = rightNodePropList;
     }
-
     void setLeftNodeObservedProp(Double leftNodeObservedProp) {
         this.leftNodeObservedProp = leftNodeObservedProp;
     }
-
     void setRightNodeObservedProp(Double rightNodeObservedProp) {
         this.rightNodeObservedProp = rightNodeObservedProp;
     }

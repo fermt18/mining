@@ -3,6 +3,7 @@ package datafetchers;
 import model.Point;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +45,8 @@ class Test_DataFetcher_integer_coordinates {
     @Test
     void get_data_from_csv_assert_coordinates() {
         List<Point> expected_trainingSet = new ArrayList<>();
-        expected_trainingSet.add(createPoint(4, 9, 1.0));
-        expected_trainingSet.add(createPoint(6, 8, 2.0));
+        expected_trainingSet.add(Utils.createPoint(new Point(4, 9), 1.0));
+        expected_trainingSet.add(Utils.createPoint(new Point(6, 8), 2.0));
         assertThat(trainingSet, equalTo(expected_trainingSet));
     }
 
@@ -53,11 +54,5 @@ class Test_DataFetcher_integer_coordinates {
     void get_data_from_csv_assert_values() {
         assertThat(trainingSet.get(0).getValue(), is(1.0));
         assertThat(trainingSet.get(1).getValue(), is(2.0));
-    }
-
-    private Point createPoint(Integer x, Integer y, Double value){
-        Point p = new Point(x, y);
-        p.setValue(value);
-        return p;
     }
 }

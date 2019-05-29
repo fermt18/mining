@@ -7,10 +7,12 @@ import java.util.List;
 public class TrainingSet {
 
     private List<Point> trainingSet;
+    private Integer numberOfClasses;
     private Double classA;
     private Double classB;
 
     public List<Point> getTrainingSet(){return this.trainingSet;}
+    public Integer getNumberOfClasses(){return this.numberOfClasses;}
     public Double getClassA(){return this.classA;}
     public Double getClassB(){return this.classB;}
 
@@ -36,6 +38,7 @@ public class TrainingSet {
         if(classList.size() > 2)
             throw new IllegalArgumentException("Training set has more than two classes");
 
+        this.numberOfClasses = classList.size();
         this.classA = Collections.min(classList);
         this.classB = Collections.max(classList);
     }

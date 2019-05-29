@@ -4,13 +4,10 @@ import classifiers.knn.Knn;
 import datafetchers.CSVFetcher;
 import model.Point;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import utils.Utils;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +26,12 @@ class IT_UseCase_CSV {
         trainingSet = csvFetcher.getTrainingSet();
         validationSet = new ArrayList<>();
         // point values are only added for test validation purposes
-        validationSet.add(createNewPoint(new Point(110.1, 19.2), 1.0));
-        validationSet.add(createNewPoint(new Point(108, 17.6), 1.0));
-        validationSet.add(createNewPoint(new Point(81, 20), 1.0));
-        validationSet.add(createNewPoint(new Point(52.8, 20.8), 2.0));
-        validationSet.add(createNewPoint(new Point(59.4, 16), 2.0));
-        validationSet.add(createNewPoint(new Point(66, 18.4), 2.0));
+        validationSet.add(Utils.createPoint(new Point(110.1, 19.2), 1.0));
+        validationSet.add(Utils.createPoint(new Point(108, 17.6), 1.0));
+        validationSet.add(Utils.createPoint(new Point(81, 20), 1.0));
+        validationSet.add(Utils.createPoint(new Point(52.8, 20.8), 2.0));
+        validationSet.add(Utils.createPoint(new Point(59.4, 16), 2.0));
+        validationSet.add(Utils.createPoint(new Point(66, 18.4), 2.0));
     }
 
     @ParameterizedTest
@@ -49,10 +46,5 @@ class IT_UseCase_CSV {
         }
         Double error = Utils.roundToDecimals((double) wrongClassifications / validationSet.size(), 2);
         assertThat(error, is(expectedError));
-    }
-
-    private Point createNewPoint(Point p, Double value){
-        p.setValue(value);
-        return p;
     }
 }
