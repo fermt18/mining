@@ -34,24 +34,26 @@ public class CART {
             sortedSplitValuesX = computeMidPoints(valuesXAxis);
             sortedSplitValuesY = computeMidPoints(valuesYAxis);
         }
-        Map<Double, Double> coefficientMap = new HashMap<>();
-        for(Double splitValue : sortedSplitValuesY) {
-            // rank according how much reduce impurity
-            // impurity(rectangle before the split) - SUM(impurity(new rectangle left) + impurity(new rectangle left))
+        Map<Double, Double> sortedCoefficientMapForYVariable = createSortedCoefficientMapForVariable(sortedSplitValuesY, "y");
+
+        splitVariable = "y";
+        splitValue = sortedCoefficientMapForYVariable.entrySet().stream().findFirst().get().getKey();
+    }
+
+    Map<Double, Double> createSortedCoefficientMapForVariable(List<Double> sortedSplitValues, String splitAxis){
+        Map<Double, Double> sortedCoefficientMapForVariable = new HashMap<>();
+        for(Double splitValue : sortedSplitValues) {
             Gini gini = new Gini();
             gini.setInputNodePropList(obtainProportionsFromValues(trainingSet.getTrainingSet()));
-            gini.setLeftNodePropList(obtainProportionsFromValues(obtainPointsLeftToPoint(trainingSet.getTrainingSet(), "y", splitValue)));
+            gini.setLeftNodePropList(obtainProportionsFromValues(obtainPointsLeftToPoint(trainingSet.getTrainingSet(), splitAxis, splitValue)));
             gini.setLeftNodeObservedProp(2.0/3);
-            gini.setRightNodePropList(obtainProportionsFromValues(obtainPointsRightToPoint(trainingSet.getTrainingSet(), "y", splitValue)));
+            gini.setRightNodePropList(obtainProportionsFromValues(obtainPointsRightToPoint(trainingSet.getTrainingSet(), splitAxis, splitValue)));
             gini.setRightNodeObservedProp(1.0/3);
-            coefficientMap.put(splitValue, gini.computeSplitCoefficient());
+            sortedCoefficientMapForVariable.put(splitValue, gini.computeSplitCoefficient());
         }
-        // split variable is the one that has the minimum impurity taking into account both variables
-        splitVariable = "y";
-        Map<Double, Double> coefficientSortedMap = coefficientMap.entrySet().stream()
+        return sortedCoefficientMapForVariable.entrySet().stream()
                 .sorted(comparingByValue())
                 .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-        splitValue = coefficientSortedMap.entrySet().stream().findFirst().get().getKey();
     }
 
     List<Double> obtainProportionsFromValues(List<Point> pointList){
