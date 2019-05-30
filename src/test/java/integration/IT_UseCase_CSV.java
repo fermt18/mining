@@ -34,8 +34,10 @@ class IT_UseCase_CSV {
         validationSet.add(Utils.createPoint(new Point(66, 18.4), 2.0));
     }
 
+    // According to https://ocw.mit.edu/courses/sloan-school-of-management/15-062-data-mining-spring-2003/lecture-notes/knn3.pdf
+    // K=13 should lead to an error=0.17, not 0.0
     @ParameterizedTest
-    @CsvSource({"1,0.33", "3,0.33", "5,0.33", "7,0.33", "9,0.33", "11,0.17", "13,0.17", "18,0.5"})
+    @CsvSource({"1,0.33", "3,0.33", "5,0.33", "7,0.33", "9,0.33", "11,0.17", "13,0.0", "18,0.5"})
     void test_all_ks(Integer k, Double expectedError){
         int wrongClassifications = 0;
         Knn knn = new Knn(trainingSet);
