@@ -34,10 +34,29 @@ public class CART {
             sortedSplitValuesX = computeMidPoints(valuesXAxis);
             sortedSplitValuesY = computeMidPoints(valuesYAxis);
         }
+        Map<Double, Double> sortedCoefficientMapForXVariable = createSortedCoefficientMapForVariable(sortedSplitValuesX, "x");
         Map<Double, Double> sortedCoefficientMapForYVariable = createSortedCoefficientMapForVariable(sortedSplitValuesY, "y");
+        Map.Entry<Double, Double> minX = null;
+        try {
+            minX = sortedCoefficientMapForXVariable.entrySet().stream().findFirst().get();
+        }
+        catch (NoSuchElementException e){
+            splitVariable = "y";
+            splitValue = sortedCoefficientMapForYVariable.entrySet().stream().findFirst().get().getKey();
+        }
+        Map.Entry<Double, Double> minY = null;
+        try {
+            minY = sortedCoefficientMapForYVariable.entrySet().stream().findFirst().get();
+        }
+        catch (NoSuchElementException e){
+            splitVariable = "x";
+            splitValue = sortedCoefficientMapForXVariable.entrySet().stream().findFirst().get().getKey();
+        }
 
-        splitVariable = "y";
-        splitValue = sortedCoefficientMapForYVariable.entrySet().stream().findFirst().get().getKey();
+        if( splitVariable == null) {
+            splitVariable = "y";
+            splitValue = (minX.getValue() < minY.getValue()) ? sortedCoefficientMapForXVariable.entrySet().stream().findFirst().get().getKey() : sortedCoefficientMapForYVariable.entrySet().stream().findFirst().get().getKey();
+        }
     }
 
     Map<Double, Double> createSortedCoefficientMapForVariable(List<Double> sortedSplitValues, String splitAxis){
