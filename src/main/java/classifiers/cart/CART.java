@@ -53,9 +53,9 @@ class CART {
             Gini gini = new Gini();
             gini.setInputNodePropList(obtainProportionsFromValues(trainingSet.getTrainingSet()));
             gini.setLeftNodePropList(obtainProportionsFromValues(obtainPointsLeftToPoint(trainingSet.getTrainingSet(), splitAxis, splitValue)));
-            gini.setLeftNodeObservedProp(2.0/3);
+            gini.setLeftNodeObservedProp(obtainProportionsFromValues(trainingSet.getTrainingSet()).get(0));
             gini.setRightNodePropList(obtainProportionsFromValues(obtainPointsRightToPoint(trainingSet.getTrainingSet(), splitAxis, splitValue)));
-            gini.setRightNodeObservedProp(1.0/3);
+            gini.setRightNodeObservedProp(obtainProportionsFromValues(trainingSet.getTrainingSet()).get(1));
             sortedCoefficientMapForVariable.put(splitValue, gini.computeSplitCoefficient());
         }
         return sortedCoefficientMapForVariable.entrySet().stream()
