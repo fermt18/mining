@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import static java.util.Map.Entry.comparingByValue;
 import static java.util.stream.Collectors.toMap;
 
-
 class CART {
 
     TrainingSet trainingSet;
@@ -26,15 +25,10 @@ class CART {
     }
 
     void nextSplit(){
-        List<Double> sortedSplitValuesX = new ArrayList<>();
-        List<Double> sortedSplitValuesY = new ArrayList<>();
-        for(int i=0; i<trainingSet.getNumberOfClasses(); i++) {
-            // find possible split values -> mid points between pairs of consecutive values of each variable
-            List<Double> valuesXAxis = obtainAxisValues(trainingSet.getTrainingSet(), IndepVariable.X);
-            List<Double> valuesYAxis = obtainAxisValues(trainingSet.getTrainingSet(), IndepVariable.Y);
-            sortedSplitValuesX = computeMidPoints(valuesXAxis);
-            sortedSplitValuesY = computeMidPoints(valuesYAxis);
-        }
+        // find possible split values -> mid points between pairs of consecutive values of each variable
+        List<Double> sortedSplitValuesX = computeMidPoints(obtainAxisValues(trainingSet.getTrainingSet(), IndepVariable.X));
+        List<Double> sortedSplitValuesY = computeMidPoints(obtainAxisValues(trainingSet.getTrainingSet(), IndepVariable.Y));
+
         Map.Entry<Double, Double> minCoefficientForXVariable = obtainMinCoefficientForVariable(sortedSplitValuesX, IndepVariable.X);
         Map.Entry<Double, Double> minCoefficientForYVariable = obtainMinCoefficientForVariable(sortedSplitValuesY, IndepVariable.Y);
         if(minCoefficientForXVariable == null){
@@ -72,14 +66,14 @@ class CART {
                 .orElse(null);
     }
 
-    List<Double> obtainProportionsFromValues(List<Point> pointList){
-        double classA = pointList.get(0).getValue();
-        long counterA = pointList.stream()
+    List<Double> obtainProportionsFromValues(List<Point> training){
+        double classA = training.get(0).getValue();
+        long counterA = training.stream()
                 .filter(p->p.getValue()==classA)
                 .count();
         return Arrays.asList(
-                (double)(counterA)/pointList.size(),
-                (double)(pointList.size()-counterA)/pointList.size());
+                (double)(counterA)/training.size(),
+                (double)(training.size()-counterA)/training.size());
     }
 
     List<Double> obtainAxisValues(List<Point> pointList, Enum axis){
