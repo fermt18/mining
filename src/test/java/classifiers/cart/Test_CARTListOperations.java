@@ -1,5 +1,6 @@
 package classifiers.cart;
 
+import model.IndepVariable;
 import model.Point;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,7 @@ class Test_CARTListOperations {
                 new Point(43.2, 1),
                 new Point(3, 2));
         List<Double> expected = Arrays.asList(1.0, 43.2, 3.0);
-        assertThat(cart.obtainAxisValues(valueList, "x"), equalTo(expected));
+        assertThat(cart.obtainAxisValues(valueList, IndepVariable.X), equalTo(expected));
     }
 
     @Test
@@ -49,7 +50,7 @@ class Test_CARTListOperations {
                 new Point(43.2, 1),
                 new Point(3, 2));
         List<Double> expected = Arrays.asList(0.0, 1.0, 2.0);
-        assertThat(cart.obtainAxisValues(valueList, "y"), equalTo(expected));
+        assertThat(cart.obtainAxisValues(valueList, IndepVariable.Y), equalTo(expected));
     }
 
     @Test
@@ -82,7 +83,7 @@ class Test_CARTListOperations {
         List<Point> expectedPointList = Arrays.asList(
                 new Point(0,0),
                 new Point(1, 2));
-        assertThat(cart.obtainPointsLeftToPoint(pointList, "x", 1.5), equalTo(expectedPointList));
+        assertThat(cart.obtainPointsLeftToPoint(pointList, IndepVariable.X, 1.5), equalTo(expectedPointList));
     }
 
     @Test
@@ -94,7 +95,7 @@ class Test_CARTListOperations {
         List<Point> expectedPointList = Arrays.asList(
                 new Point(0,0),
                 new Point(1, 2));
-        assertThat(cart.obtainPointsLeftToPoint(pointList, "y", 2.5), equalTo(expectedPointList));
+        assertThat(cart.obtainPointsLeftToPoint(pointList, IndepVariable.Y, 2.5), equalTo(expectedPointList));
     }
 
     @Test
@@ -105,7 +106,7 @@ class Test_CARTListOperations {
                 new Point(2, 3));
         List<Point> expectedPointList = Arrays.asList(
                 new Point(2,3));
-        assertThat(cart.obtainPointsRightToPoint(pointList, "x", 1.5), equalTo(expectedPointList));
+        assertThat(cart.obtainPointsRightToPoint(pointList, IndepVariable.X, 1.5), equalTo(expectedPointList));
     }
 
     @Test
@@ -116,6 +117,6 @@ class Test_CARTListOperations {
                 new Point(2, 3));
         List<Point> expectedPointList = Arrays.asList(
                 new Point(2, 3));
-        assertThat(cart.obtainPointsRightToPoint(pointList, "y", 2.5), equalTo(expectedPointList));
+        assertThat(cart.obtainPointsRightToPoint(pointList, IndepVariable.Y, 2.5), equalTo(expectedPointList));
     }
 }

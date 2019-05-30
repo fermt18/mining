@@ -1,5 +1,6 @@
 package classifiers.cart;
 
+import model.IndepVariable;
 import model.Point;
 import org.junit.jupiter.api.Test;
 import utils.Utils;
@@ -21,7 +22,7 @@ class Test_SelectNodeSplit {
 
         CART cart = new CART(training);
         cart.nextSplit();
-        assertThat(cart.getSplitVariable(), is("y"));
+        assertThat(cart.getSplitVariable(), is(IndepVariable.X));
         assertThat(cart.getSplitValue(), is(0.5));
     }
 
@@ -33,7 +34,7 @@ class Test_SelectNodeSplit {
 
         CART cart = new CART(training);
         cart.nextSplit();
-        assertThat(cart.getSplitVariable(), is("x"));
+        assertThat(cart.getSplitVariable(), is(IndepVariable.X));
         assertThat(cart.getSplitValue(), is(1.0));
     }
 }

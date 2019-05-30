@@ -1,5 +1,6 @@
 package classifiers.cart;
 
+import model.IndepVariable;
 import model.Point;
 import model.TrainingSet;
 
@@ -10,13 +11,13 @@ import static java.util.Map.Entry.comparingByValue;
 import static java.util.stream.Collectors.toMap;
 
 
-public class CART {
+class CART {
 
     TrainingSet trainingSet;
-    private String splitVariable;
+    private Enum splitVariable;
     private Double splitValue;
 
-    String getSplitVariable() {return splitVariable;}
+    Enum getSplitVariable() {return splitVariable;}
     Double getSplitValue() {return splitValue;}
 
     CART(){}
@@ -29,37 +30,30 @@ public class CART {
         List<Double> sortedSplitValuesY = new ArrayList<>();
         for(int i=0; i<trainingSet.getNumberOfClasses(); i++) {
             // find possible split values -> mid points between pairs of consecutive values of each variable
-            List<Double> valuesXAxis = obtainAxisValues(trainingSet.getTrainingSet(), "x");
-            List<Double> valuesYAxis = obtainAxisValues(trainingSet.getTrainingSet(), "y");
+            List<Double> valuesXAxis = obtainAxisValues(trainingSet.getTrainingSet(), IndepVariable.X);
+            List<Double> valuesYAxis = obtainAxisValues(trainingSet.getTrainingSet(), IndepVariable.Y);
             sortedSplitValuesX = computeMidPoints(valuesXAxis);
             sortedSplitValuesY = computeMidPoints(valuesYAxis);
         }
-        Map<Double, Double> sortedCoefficientMapForXVariable = createSortedCoefficientMapForVariable(sortedSplitValuesX, "x");
-        Map<Double, Double> sortedCoefficientMapForYVariable = createSortedCoefficientMapForVariable(sortedSplitValuesY, "y");
-        Map.Entry<Double, Double> minX = null;
-        try {
-            minX = sortedCoefficientMapForXVariable.entrySet().stream().findFirst().get();
+        Map.Entry<Double, Double> minCoefficientForXVariable = obtainMinCoefficientForVariable(sortedSplitValuesX, IndepVariable.X);
+        Map.Entry<Double, Double> minCoefficientForYVariable = obtainMinCoefficientForVariable(sortedSplitValuesY, IndepVariable.Y);
+        if(minCoefficientForXVariable == null){
+            splitVariable = IndepVariable.Y;
+            splitValue = minCoefficientForYVariable.getKey();
         }
-        catch (NoSuchElementException e){
-            splitVariable = "y";
-            splitValue = sortedCoefficientMapForYVariable.entrySet().stream().findFirst().get().getKey();
+        else if(minCoefficientForYVariable == null){
+            splitVariable = IndepVariable.X;
+            splitValue = minCoefficientForXVariable.getKey();
         }
-        Map.Entry<Double, Double> minY = null;
-        try {
-            minY = sortedCoefficientMapForYVariable.entrySet().stream().findFirst().get();
-        }
-        catch (NoSuchElementException e){
-            splitVariable = "x";
-            splitValue = sortedCoefficientMapForXVariable.entrySet().stream().findFirst().get().getKey();
-        }
-
-        if( splitVariable == null) {
-            splitVariable = "y";
-            splitValue = (minX.getValue() < minY.getValue()) ? sortedCoefficientMapForXVariable.entrySet().stream().findFirst().get().getKey() : sortedCoefficientMapForYVariable.entrySet().stream().findFirst().get().getKey();
+        else{
+            splitVariable = (minCoefficientForXVariable.getValue() < minCoefficientForYVariable.getValue())
+                    ? IndepVariable.X : IndepVariable.Y;
+            splitValue = (minCoefficientForXVariable.getValue() < minCoefficientForYVariable.getValue())
+                    ? minCoefficientForXVariable.getKey() : minCoefficientForYVariable.getKey();
         }
     }
 
-    Map<Double, Double> createSortedCoefficientMapForVariable(List<Double> sortedSplitValues, String splitAxis){
+    Map.Entry<Double, Double> obtainMinCoefficientForVariable(List<Double> sortedSplitValues, Enum splitAxis){
         Map<Double, Double> sortedCoefficientMapForVariable = new HashMap<>();
         for(Double splitValue : sortedSplitValues) {
             Gini gini = new Gini();
@@ -72,7 +66,10 @@ public class CART {
         }
         return sortedCoefficientMapForVariable.entrySet().stream()
                 .sorted(comparingByValue())
-                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new))
+                .entrySet().stream()
+                .findFirst()
+                .orElse(null);
     }
 
     List<Double> obtainProportionsFromValues(List<Point> pointList){
@@ -85,13 +82,13 @@ public class CART {
                 (double)(pointList.size()-counterA)/pointList.size());
     }
 
-    List<Double> obtainAxisValues(List<Point> pointList, String axis){
+    List<Double> obtainAxisValues(List<Point> pointList, Enum axis){
         List<Double> axisPoints = new ArrayList<>();
-        if(axis.equals("x"))
+        if(axis.equals(IndepVariable.X))
             axisPoints = pointList.stream()
                 .map(Point::getX)
                 .collect(Collectors.toList());
-        else if(axis.equals("y"))
+        else if(axis.equals(IndepVariable.Y))
             axisPoints = pointList.stream()
                     .map(Point::getY)
                     .collect(Collectors.toList());
@@ -108,26 +105,26 @@ public class CART {
         return midPointList;
     }
 
-    List<Point> obtainPointsLeftToPoint(List<Point> pointList, String splitAxis, Double splitValue){
+    List<Point> obtainPointsLeftToPoint(List<Point> pointList, Enum splitAxis, Double splitValue){
         List<Point> filteredPoints = null;
-        if(splitAxis.equals("x"))
+        if(splitAxis.equals(IndepVariable.X))
             filteredPoints = pointList.stream()
                 .filter(p->p.getX()<splitValue)
                 .collect(Collectors.toList());
-        else if(splitAxis.equals("y"))
+        else if(splitAxis.equals(IndepVariable.Y))
             filteredPoints = pointList.stream()
                     .filter(p->p.getY()<splitValue)
                     .collect(Collectors.toList());
         return filteredPoints;
     }
 
-    List<Point> obtainPointsRightToPoint(List<Point> pointList, String splitAxis, Double splitValue){
+    List<Point> obtainPointsRightToPoint(List<Point> pointList, Enum splitAxis, Double splitValue){
         List<Point> filteredPoints = null;
-        if(splitAxis.equals("x"))
+        if(splitAxis.equals(IndepVariable.X))
             filteredPoints = pointList.stream()
                     .filter(p->p.getX()>splitValue)
                     .collect(Collectors.toList());
-        else if(splitAxis.equals("y"))
+        else if(splitAxis.equals(IndepVariable.Y))
             filteredPoints = pointList.stream()
                     .filter(p->p.getY()>splitValue)
                     .collect(Collectors.toList());
