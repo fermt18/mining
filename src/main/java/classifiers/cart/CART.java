@@ -10,21 +10,21 @@ import java.util.stream.Collectors;
 import static java.util.Map.Entry.comparingByValue;
 import static java.util.stream.Collectors.toMap;
 
-class CART {
+public class CART {
 
     TrainingSet trainingSet;
     private Enum splitVariable;
     private Double splitValue;
 
-    Enum getSplitVariable() {return splitVariable;}
-    Double getSplitValue() {return splitValue;}
+    public Enum getSplitVariable() {return splitVariable;}
+    public Double getSplitValue() {return splitValue;}
 
     CART(){}
-    CART(List<Point> training){
+    public CART(List<Point> training){
         trainingSet = new TrainingSet(training);
     }
 
-    void nextSplit(){
+    public void nextSplit(){
         // find possible split values -> mid points between pairs of consecutive values of each variable
         List<Double> sortedSplitValuesX = computeMidPoints(obtainAxisValues(trainingSet.getTrainingSet(), IndepVariable.X));
         List<Double> sortedSplitValuesY = computeMidPoints(obtainAxisValues(trainingSet.getTrainingSet(), IndepVariable.Y));

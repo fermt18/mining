@@ -15,7 +15,8 @@ class Test_SelectNodeSplit {
 
     @ParameterizedTest
     @ArgumentsSource(TrainingForSplitProvider.class)
-    void choose_split_by_independent_variable_and_value(List<Point> training, IndepVariable expSplitVar, Double expSplitVal){
+    void choose_split_by_independent_variable_and_value(
+            List<Point> training, IndepVariable expSplitVar, Double expSplitVal){
         CART cart = new CART(training);
         cart.nextSplit();
         assertThat(cart.getSplitVariable(), is(expSplitVar));

@@ -14,7 +14,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-class IT_UseCase_CSV {
+class IT_KNN_from_CSV {
 
     private List<Point> validationSet;
     private List<Point> trainingSet;
