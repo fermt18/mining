@@ -70,18 +70,21 @@ public class CART {
     List<List<Point>> divideRectangle(IndepVariable splitVariable, Double splitValue){
         List<Point> leftRectangle = new ArrayList<>();
         List<Point> rightRectangle = new ArrayList<>();
-        trainingSet.getTrainingSet().forEach(p->{
-            if(splitVariable.equals(IndepVariable.X)){
-                if(p.getX()<splitValue)
-                    leftRectangle.add(p);
-                else
-                    rightRectangle.add(p);
-            }
-            else if(splitVariable.equals(IndepVariable.Y)){
-                if(p.getY()<splitValue)
-                    leftRectangle.add(p);
-                else
-                    rightRectangle.add(p);
+        trainingSet.getTrainingSet().forEach(p-> {
+            switch (splitVariable) {
+                case X:
+                    if (p.getX() < splitValue)
+                        leftRectangle.add(p);
+                    else
+                        rightRectangle.add(p);
+                    break;
+
+                case Y:
+                    if (p.getY() < splitValue)
+                        leftRectangle.add(p);
+                    else
+                        rightRectangle.add(p);
+                    break;
             }
         });
         return Arrays.asList(leftRectangle, rightRectangle);
