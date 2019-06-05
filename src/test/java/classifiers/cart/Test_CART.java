@@ -108,8 +108,8 @@ class Test_CART {
         List<Point> rectangle = Arrays.asList(
                 Utils.createPoint(new Point(0,0), 1.0),
                 Utils.createPoint(new Point(0,1), 2.0));
-        List<Point> rectangle1 = Collections.singletonList(new Point(0,0));
-        List<Point> rectangle2 = Collections.singletonList(new Point(1,1));
+        List<Point> rectangle1 = Collections.singletonList(Utils.createPoint(new Point(0,0), 1.0));
+        List<Point> rectangle2 = Collections.singletonList(Utils.createPoint(new Point(0,1), 2.0));
         CART cart = new CART(rectangle);
         assertThat(cart.createRectangleListFromSplitList(),
                 equalTo(Arrays.asList(rectangle)));
