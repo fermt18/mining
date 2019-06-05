@@ -106,7 +106,7 @@ class Test_CART {
             List<Point> training, IndepVariable expSplitVar, Double expSplitVal){
         CART cart = new CART(training);
         cart.nextSplit();
-        assertThat(cart.getSplitVariable(), is(expSplitVar));
-        assertThat(cart.getSplitValue(), is(expSplitVal));
+        assertThat(cart.getNextSplitLine().getSplitVariable(), is(expSplitVar));
+        assertThat(cart.getNextSplitLine().getSplitValue(), is(expSplitVal));
     }
 }

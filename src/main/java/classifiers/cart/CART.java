@@ -11,11 +11,9 @@ import java.util.*;
 public class CART {
 
     private TrainingSet trainingSet;
-    private IndepVariable splitVariable;
-    private Double splitValue;
+    private SplitLine nextSplitLine;
 
-    public IndepVariable getSplitVariable() {return splitVariable;}
-    public Double getSplitValue() {return splitValue;}
+    public SplitLine getNextSplitLine() {return nextSplitLine;}
 
     public CART(List<Point> training){
         trainingSet = new TrainingSet(training);
@@ -32,8 +30,9 @@ public class CART {
         Map.Entry<IndepVariable, Double> highestReduction = impurityMap.entrySet().stream()
                 .max(Map.Entry.comparingByValue())
                 .get().getKey();
-        splitVariable = highestReduction.getKey();
-        splitValue = highestReduction.getValue();
+        nextSplitLine = new SplitLine();
+        nextSplitLine.setSplitVariable(highestReduction.getKey());
+        nextSplitLine.setSplitValue(highestReduction.getValue());
     }
 
     MultiValuedMap<IndepVariable, Double> computeMidPointsFromTrainingSet(){
