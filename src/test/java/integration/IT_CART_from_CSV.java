@@ -25,8 +25,8 @@ class IT_CART_from_CSV {
         // https://ocw.mit.edu/courses/sloan-school-of-management/15-062-data-mining-spring-2003/lecture-notes/L3ClassTrees.pdf
         // first split is Y=19.0, being X=84.75 the second one. However, impurity reduction is higher with X=84.75
         cart.nextSplit();
-        assertThat(cart.getNextSplitLine().getSplitVariable(), is(IndepVariable.X));
-        assertThat(cart.getNextSplitLine().getSplitValue(), is(84.75));
+        assertThat(cart.getSplitLineList().get(1).getSplitVariable(), is(IndepVariable.X));
+        assertThat(cart.getSplitLineList().get(1).getSplitValue(), is(84.75));
     }
 /*
     @Test

@@ -11,28 +11,49 @@ import java.util.*;
 public class CART {
 
     private TrainingSet trainingSet;
-    private SplitLine nextSplitLine;
+    private List<SplitLine> splitLineList;
 
-    public SplitLine getNextSplitLine() {return nextSplitLine;}
+    public List<SplitLine> getSplitLineList() {return splitLineList;}
 
     public CART(List<Point> training){
         trainingSet = new TrainingSet(training);
+        splitLineList = new ArrayList<>();
+        splitLineList.add(new SplitLine());
     }
 
-    public void nextSplit(){
+    public void nextSplit() {
+        SplitLine potentialSplitLine = new SplitLine();
+        for(SplitLine splitLine : splitLineList) {
+            Map.Entry<IndepVariable, Double> highestReduction = computeImpurityMap(trainingSet.getTrainingSet());
+            potentialSplitLine.setSplitVariable(highestReduction.getKey());
+            potentialSplitLine.setSplitValue(highestReduction.getValue());
+            potentialSplitLine.setHighLimit(null);
+            potentialSplitLine.setLowLimit(0.0);
+        }
+        //SplitLine nextSplitLine = new SplitLine();
+        //nextSplitLine.setSplitVariable(highestReduction.getKey());
+        //nextSplitLine.setSplitValue(highestReduction.getValue());
+        splitLineList.add(potentialSplitLine);
+    }
+
+    List<List<Point>> createRectangleListFromSplitList(){
+        List<List<Point>> rectangleList = new ArrayList<>();
+        rectangleList.add(Collections.singletonList(new Point(0,0)));
+        rectangleList.add(Collections.singletonList(new Point(1,1)));
+        return rectangleList;
+    }
+
+    Map.Entry<IndepVariable, Double> computeImpurityMap(List<Point> rectangle){
         Map<Map.Entry<IndepVariable, Double>, Double> impurityMap = new HashMap<>();
-        computeMidPointsFromTrainingSet().entries().forEach(mp->{
-            Double IOriginalRect = computeImpurity(trainingSet.getTrainingSet());
-            Double ILeftRect = computeImpurity(divideRectangle(mp.getKey(), mp.getValue()).get(0));
-            Double IRightRect = computeImpurity(divideRectangle(mp.getKey(), mp.getValue()).get(1));
+        computeMidPointsFromTrainingSet().entries().forEach(mp -> {
+            Double IOriginalRect = computeImpurity(rectangle);
+            Double ILeftRect = computeImpurity(divideRectangle(rectangle, mp.getKey(), mp.getValue()).get(0));
+            Double IRightRect = computeImpurity(divideRectangle(rectangle, mp.getKey(), mp.getValue()).get(1));
             impurityMap.put(mp, IOriginalRect - (ILeftRect + IRightRect));
         });
-        Map.Entry<IndepVariable, Double> highestReduction = impurityMap.entrySet().stream()
+        return impurityMap.entrySet().stream()
                 .max(Map.Entry.comparingByValue())
                 .get().getKey();
-        nextSplitLine = new SplitLine();
-        nextSplitLine.setSplitVariable(highestReduction.getKey());
-        nextSplitLine.setSplitValue(highestReduction.getValue());
     }
 
     MultiValuedMap<IndepVariable, Double> computeMidPointsFromTrainingSet(){
@@ -66,21 +87,19 @@ public class CART {
                 (double)(rectangle.size()-counterA)/rectangle.size()));
     }
 
-    List<List<Point>> divideRectangle(IndepVariable splitVariable, Double splitValue){
+    List<List<Point>> divideRectangle(List<Point> rectangle, IndepVariable splitVariable, Double splitValue){
         List<Point> leftRectangle = new ArrayList<>();
         List<Point> rightRectangle = new ArrayList<>();
-        trainingSet.getTrainingSet().forEach(p-> {
+        rectangle.forEach(p-> {
             switch (splitVariable) {
                 case X:
-                    if (p.getX() < splitValue)
-                        leftRectangle.add(p);
+                    if (p.getX() < splitValue)  leftRectangle.add(p);
                     else
                         rightRectangle.add(p);
                     break;
 
                 case Y:
-                    if (p.getY() < splitValue)
-                        leftRectangle.add(p);
+                    if (p.getY() < splitValue)  leftRectangle.add(p);
                     else
                         rightRectangle.add(p);
                     break;

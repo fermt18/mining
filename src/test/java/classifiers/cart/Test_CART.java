@@ -87,17 +87,29 @@ class Test_CART {
     }
 
     @Test
-    void get_rectangle_from_split_point(){
+    void divide_rectangle_into_left_and_right_from_split_point(){
         List<Point> rectangle = Arrays.asList(
                 Utils.createPoint(new Point(1,1), 10.0),
                 Utils.createPoint(new Point(2,2), 20.0));
         CART cart = new CART(rectangle);
         List<Point> leftRectangle = Collections.singletonList(Utils.createPoint(new Point(1,1), 10.0));
         List<Point> rightRectangle = Collections.singletonList(Utils.createPoint(new Point(2,2), 20.0));
-        List<List<Point>> splitedRectangles = cart.divideRectangle(IndepVariable.X, 1.5);
+        List<List<Point>> splitedRectangles = cart.divideRectangle(rectangle, IndepVariable.X, 1.5);
         assertThat(splitedRectangles.size(), is(2));
         assertThat(splitedRectangles.get(0), equalTo(leftRectangle));
         assertThat(splitedRectangles.get(1), equalTo(rightRectangle));
+    }
+
+    @Test
+    void get_rectangle_list_from_split_list(){
+        List<Point> rectangle = Arrays.asList(
+                Utils.createPoint(new Point(0,0), 1.0),
+                Utils.createPoint(new Point(0,1), 2.0));
+        List<Point> rectangle1 = Collections.singletonList(new Point(0,0));
+        List<Point> rectangle2 = Collections.singletonList(new Point(1,1));
+        CART cart = new CART(rectangle);
+        cart.nextSplit();
+        assertThat(cart.createRectangleListFromSplitList(), equalTo(Arrays.asList(rectangle1, rectangle2)));
     }
 
     @ParameterizedTest
@@ -106,7 +118,7 @@ class Test_CART {
             List<Point> training, IndepVariable expSplitVar, Double expSplitVal){
         CART cart = new CART(training);
         cart.nextSplit();
-        assertThat(cart.getNextSplitLine().getSplitVariable(), is(expSplitVar));
-        assertThat(cart.getNextSplitLine().getSplitValue(), is(expSplitVal));
+        assertThat(cart.getSplitLineList().get(1).getSplitVariable(), is(expSplitVar));
+        assertThat(cart.getSplitLineList().get(1).getSplitValue(), is(expSplitVal));
     }
 }
