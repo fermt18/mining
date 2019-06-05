@@ -77,7 +77,6 @@ class Test_CART {
         assertThat(map, equalTo(expectedMap));
     }
 
-
     @Test
     void compute_impurity_for_a_rectangle_with_max_impurity(){
         List<Point> rectangle = Arrays.asList(

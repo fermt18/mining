@@ -30,8 +30,7 @@ public class CART {
             impurityMap.put(mp, IOriginalRect - (ILeftRect + IRightRect));
         });
         Map.Entry<IndepVariable, Double> highestReduction = impurityMap.entrySet().stream()
-                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-                .findFirst()
+                .max(Map.Entry.comparingByValue())
                 .get().getKey();
         splitVariable = highestReduction.getKey();
         splitValue = highestReduction.getValue();

@@ -43,14 +43,14 @@ public class TrainingForSplitProvider implements ArgumentsProvider {
         training.add(Utils.createPoint(new Point(1,1), 1.0));
         training.add(Utils.createPoint(new Point(1,0), 2.0));
         training.add(Utils.createPoint(new Point(2,1), 2.0));
-        trainingList.add(new SplitProvider(training, IndepVariable.X, 0.5));// X = 0.5 also valid
+        trainingList.add(new SplitProvider(training, IndepVariable.X, 1.5));// X = 0.5 also valid
 
         training = new ArrayList<>();
         training.add(Utils.createPoint(new Point(0,0), 1.0));
         training.add(Utils.createPoint(new Point(1,1), 1.0));
         training.add(Utils.createPoint(new Point(2,2), 2.0));
         training.add(Utils.createPoint(new Point(3,3), 2.0));
-        trainingList.add(new SplitProvider(training, IndepVariable.Y, 1.5));
+        trainingList.add(new SplitProvider(training, IndepVariable.X, 1.5));// Y = 1.5 also valid
 
         return trainingList;
     }
