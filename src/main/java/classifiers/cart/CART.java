@@ -30,9 +30,6 @@ public class CART {
             potentialSplitLine.setHighLimit(null);
             potentialSplitLine.setLowLimit(0.0);
         }
-        //SplitLine nextSplitLine = new SplitLine();
-        //nextSplitLine.setSplitVariable(highestReduction.getKey());
-        //nextSplitLine.setSplitValue(highestReduction.getValue());
         splitLineList.add(potentialSplitLine);
     }
 
@@ -42,8 +39,6 @@ public class CART {
             if(splitLine.getSplitVariable()==null && splitLine.getSplitValue()==null)
                 rectangleList.add(trainingSet.getTrainingSet());
             else {
-                //rectangleList.add(Collections.singletonList(new Point(0,0)));
-                //rectangleList.add(Collections.singletonList(new Point(1,1)));
                 List<List<Point>> dividedRectangles = divideRectangle(trainingSet.getTrainingSet(), splitLine);
                 rectangleList.add(dividedRectangles.get(0));
                 rectangleList.add(dividedRectangles.get(1));
