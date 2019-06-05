@@ -3,7 +3,8 @@ package classifiers.cart;
 import junit.providers.TrainingForSplitProvider;
 import model.IndepVariable;
 import model.Point;
-import org.junit.jupiter.api.Disabled;
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
@@ -18,25 +19,64 @@ import static org.hamcrest.MatcherAssert.assertThat;
 class Test_CART {
 
     @Test
-    void get_midpoints_from_different_points(){
-        CART cart = new CART(Arrays.asList(new Point(0, 1), new Point(1,2)));
-        Map<IndepVariable, Double> expectedMap = new HashMap<>();
+    void get_midpoints_from_different_points() {
+        CART cart = new CART(Arrays.asList(new Point(0, 1), new Point(1, 2)));
+        MultiValuedMap<IndepVariable, Double> expectedMap = new ArrayListValuedHashMap<>();
         expectedMap.put(IndepVariable.X, 0.5);
         expectedMap.put(IndepVariable.Y, 1.5);
         assertThat(cart.computeMidPointsFromTrainingSet(), equalTo(expectedMap));
     }
 
     @Test
-    void get_midpoints_from_repeated_points(){
+    void get_midpoints_from_repeated_points() {
         CART cart = new CART(Arrays.asList(
                 new Point(0, 1),
-                new Point(1,1),
-                new Point(1,3)));
-        Map<IndepVariable, Double> expectedMap = new HashMap<>();
+                new Point(1, 1),
+                new Point(1, 3)));
+        MultiValuedMap<IndepVariable, Double> expectedMap = new ArrayListValuedHashMap<>();
         expectedMap.put(IndepVariable.X, 0.5);
         expectedMap.put(IndepVariable.Y, 2.0);
         assertThat(cart.computeMidPointsFromTrainingSet(), equalTo(expectedMap));
     }
+
+    @Test
+    void get_midpoints_from_consecutive_points() {
+        CART cart = new CART(Arrays.asList(
+                new Point(0, 0),
+                new Point(1, 1),
+                new Point(2, 2),
+                new Point(3, 3)));
+        MultiValuedMap<IndepVariable, Double> expectedMap = new ArrayListValuedHashMap<>();
+        expectedMap.put(IndepVariable.X, 0.5);
+        expectedMap.put(IndepVariable.X, 1.5);
+        expectedMap.put(IndepVariable.X, 2.5);
+        expectedMap.put(IndepVariable.Y, 0.5);
+        expectedMap.put(IndepVariable.Y, 1.5);
+        expectedMap.put(IndepVariable.Y, 2.5);
+        MultiValuedMap<IndepVariable, Double> map = cart.computeMidPointsFromTrainingSet();
+        assertThat(map.entries().size(), is(6));
+        assertThat(map, equalTo(expectedMap));
+    }
+
+    @Test
+    void get_midpoints_from_unsorted_points(){
+        CART cart = new CART(Arrays.asList(
+                new Point(2, 2),
+                new Point(1, 1),
+                new Point(3, 3),
+                new Point(0, 0)));
+        MultiValuedMap<IndepVariable, Double> expectedMap = new ArrayListValuedHashMap<>();
+        expectedMap.put(IndepVariable.X, 0.5);
+        expectedMap.put(IndepVariable.X, 1.5);
+        expectedMap.put(IndepVariable.X, 2.5);
+        expectedMap.put(IndepVariable.Y, 0.5);
+        expectedMap.put(IndepVariable.Y, 1.5);
+        expectedMap.put(IndepVariable.Y, 2.5);
+        MultiValuedMap<IndepVariable, Double> map = cart.computeMidPointsFromTrainingSet();
+        assertThat(map.entries().size(), is(6));
+        assertThat(map, equalTo(expectedMap));
+    }
+
 
     @Test
     void compute_impurity_for_a_rectangle_with_max_impurity(){
@@ -61,7 +101,6 @@ class Test_CART {
         assertThat(splitedRectangles.get(1), equalTo(rightRectangle));
     }
 
-    @Disabled
     @ParameterizedTest
     @ArgumentsSource(TrainingForSplitProvider.class)
     void choose_split_by_independent_variable_and_value(

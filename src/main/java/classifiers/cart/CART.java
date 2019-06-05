@@ -3,6 +3,8 @@ package classifiers.cart;
 import model.IndepVariable;
 import model.Point;
 import model.TrainingSet;
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 
 import java.util.*;
 
@@ -20,18 +22,23 @@ public class CART {
     }
 
     public void nextSplit(){
-        //take mid points
-        // for each mid point
-            // compute gini original rectangle
-            // compute gini new left rectangle
-            // compute gini new right rectangle
-            // add Impurity reduction(gini original - (gini new left + gini new right))
-
-        // choose mid point with highest impurity reduction
+        Map<Map.Entry<IndepVariable, Double>, Double> impurityMap = new HashMap<>();
+        computeMidPointsFromTrainingSet().entries().forEach(mp->{
+            Double IOriginalRect = computeImpurity(trainingSet.getTrainingSet());
+            Double ILeftRect = computeImpurity(divideRectangle(mp.getKey(), mp.getValue()).get(0));
+            Double IRightRect = computeImpurity(divideRectangle(mp.getKey(), mp.getValue()).get(1));
+            impurityMap.put(mp, IOriginalRect - (ILeftRect + IRightRect));
+        });
+        Map.Entry<IndepVariable, Double> highestReduction = impurityMap.entrySet().stream()
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .findFirst()
+                .get().getKey();
+        splitVariable = highestReduction.getKey();
+        splitValue = highestReduction.getValue();
     }
 
-    Map<IndepVariable, Double> computeMidPointsFromTrainingSet(){
-        Map<IndepVariable, Double> midPointsMap = new HashMap<>();
+    MultiValuedMap<IndepVariable, Double> computeMidPointsFromTrainingSet(){
+        MultiValuedMap<IndepVariable, Double> midPointsMap = new ArrayListValuedHashMap<>();
         List<Double> xAxisPointList = new ArrayList<>();
         List<Double> yAxisPointList = new ArrayList<>();
         trainingSet.getTrainingSet().forEach(p->{
@@ -43,8 +50,9 @@ public class CART {
         return midPointsMap;
     }
 
-    private Map<IndepVariable, Double> computeMidPoints(List<Double> pointList, IndepVariable indepVariable){
-        Map<IndepVariable, Double> midPointsMap = new HashMap<>();
+    private MultiValuedMap<IndepVariable, Double> computeMidPoints(List<Double> pointList, IndepVariable indepVariable){
+        Collections.sort(pointList);
+        MultiValuedMap<IndepVariable, Double> midPointsMap = new ArrayListValuedHashMap<>();
         for(int i=0; i<pointList.size()-1; i++){
             midPointsMap.put(indepVariable, (pointList.get(i) + pointList.get(i+1))/2);
         }
