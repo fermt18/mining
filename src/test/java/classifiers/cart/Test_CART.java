@@ -94,7 +94,10 @@ class Test_CART {
         CART cart = new CART(rectangle);
         List<Point> leftRectangle = Collections.singletonList(Utils.createPoint(new Point(1,1), 10.0));
         List<Point> rightRectangle = Collections.singletonList(Utils.createPoint(new Point(2,2), 20.0));
-        List<List<Point>> splitedRectangles = cart.divideRectangle(rectangle, IndepVariable.X, 1.5);
+        SplitLine splitLine = new SplitLine();
+        splitLine.setSplitVariable(IndepVariable.X);
+        splitLine.setSplitValue(1.5);
+        List<List<Point>> splitedRectangles = cart.divideRectangle(rectangle, splitLine);
         assertThat(splitedRectangles.size(), is(2));
         assertThat(splitedRectangles.get(0), equalTo(leftRectangle));
         assertThat(splitedRectangles.get(1), equalTo(rightRectangle));
@@ -108,8 +111,11 @@ class Test_CART {
         List<Point> rectangle1 = Collections.singletonList(new Point(0,0));
         List<Point> rectangle2 = Collections.singletonList(new Point(1,1));
         CART cart = new CART(rectangle);
+        assertThat(cart.createRectangleListFromSplitList(),
+                equalTo(Arrays.asList(rectangle)));
         cart.nextSplit();
-        assertThat(cart.createRectangleListFromSplitList(), equalTo(Arrays.asList(rectangle1, rectangle2)));
+        assertThat(cart.createRectangleListFromSplitList(),
+                equalTo(Arrays.asList(rectangle, rectangle1, rectangle2)));
     }
 
     @ParameterizedTest

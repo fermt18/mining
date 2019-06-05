@@ -23,8 +23,8 @@ public class CART {
 
     public void nextSplit() {
         SplitLine potentialSplitLine = new SplitLine();
-        for(SplitLine splitLine : splitLineList) {
-            Map.Entry<IndepVariable, Double> highestReduction = computeImpurityMap(trainingSet.getTrainingSet());
+        for(List<Point> rectangle : createRectangleListFromSplitList()) {
+            Map.Entry<IndepVariable, Double> highestReduction = computeImpurityMap(rectangle);
             potentialSplitLine.setSplitVariable(highestReduction.getKey());
             potentialSplitLine.setSplitValue(highestReduction.getValue());
             potentialSplitLine.setHighLimit(null);
@@ -38,17 +38,26 @@ public class CART {
 
     List<List<Point>> createRectangleListFromSplitList(){
         List<List<Point>> rectangleList = new ArrayList<>();
-        rectangleList.add(Collections.singletonList(new Point(0,0)));
-        rectangleList.add(Collections.singletonList(new Point(1,1)));
+        for(SplitLine splitLine : splitLineList) {
+            if(splitLine.getSplitVariable()==null && splitLine.getSplitValue()==null)
+                rectangleList.add(trainingSet.getTrainingSet());
+            else {
+                rectangleList.add(Collections.singletonList(new Point(0,0)));
+                rectangleList.add(Collections.singletonList(new Point(1,1)));
+            }
+        }
         return rectangleList;
     }
 
     Map.Entry<IndepVariable, Double> computeImpurityMap(List<Point> rectangle){
         Map<Map.Entry<IndepVariable, Double>, Double> impurityMap = new HashMap<>();
         computeMidPointsFromTrainingSet().entries().forEach(mp -> {
+            SplitLine splitLine = new SplitLine();
+            splitLine.setSplitVariable(mp.getKey());
+            splitLine.setSplitValue(mp.getValue());
             Double IOriginalRect = computeImpurity(rectangle);
-            Double ILeftRect = computeImpurity(divideRectangle(rectangle, mp.getKey(), mp.getValue()).get(0));
-            Double IRightRect = computeImpurity(divideRectangle(rectangle, mp.getKey(), mp.getValue()).get(1));
+            Double ILeftRect = computeImpurity(divideRectangle(rectangle, splitLine).get(0));
+            Double IRightRect = computeImpurity(divideRectangle(rectangle, splitLine).get(1));
             impurityMap.put(mp, IOriginalRect - (ILeftRect + IRightRect));
         });
         return impurityMap.entrySet().stream()
@@ -87,19 +96,19 @@ public class CART {
                 (double)(rectangle.size()-counterA)/rectangle.size()));
     }
 
-    List<List<Point>> divideRectangle(List<Point> rectangle, IndepVariable splitVariable, Double splitValue){
+    List<List<Point>> divideRectangle(List<Point> rectangle, SplitLine splitLine){
         List<Point> leftRectangle = new ArrayList<>();
         List<Point> rightRectangle = new ArrayList<>();
         rectangle.forEach(p-> {
-            switch (splitVariable) {
+            switch (splitLine.getSplitVariable()) {
                 case X:
-                    if (p.getX() < splitValue)  leftRectangle.add(p);
+                    if (p.getX() < splitLine.getSplitValue())  leftRectangle.add(p);
                     else
                         rightRectangle.add(p);
                     break;
 
                 case Y:
-                    if (p.getY() < splitValue)  leftRectangle.add(p);
+                    if (p.getY() < splitLine.getSplitValue())  leftRectangle.add(p);
                     else
                         rightRectangle.add(p);
                     break;
