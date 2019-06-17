@@ -28,14 +28,14 @@ class IT_CART_from_CSV {
         assertThat(cart.getSplitLineList().get(1).getSplitVariable(), is(IndepVariable.X));
         assertThat(cart.getSplitLineList().get(1).getSplitValue(), is(84.75));
     }
-/*
+
     @Test
     void test_cart_two_splits(){
         cart.nextSplit();
-        assertThat(cart.getSplitVariable(), is(IndepVariable.X));
-        assertThat(cart.getSplitValue(), is(84.75));
+        assertThat(cart.getSplitLineList().get(1).getSplitVariable(), is(IndepVariable.X));
+        assertThat(cart.getSplitLineList().get(1).getSplitValue(), is(84.75));
         cart.nextSplit();
-        assertThat(cart.getSplitVariable(), is(IndepVariable.Y));
-        assertThat(cart.getSplitValue(), is(19.0));
-    }*/
+        assertThat(cart.getSplitLineList().get(2).getSplitVariable(), is(IndepVariable.Y));
+        assertThat(cart.getSplitLineList().get(2).getSplitValue(), is(19.0));
+    }
 }
